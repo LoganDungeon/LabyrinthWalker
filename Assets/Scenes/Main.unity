@@ -643,9 +643,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 1000012231903878, guid: acaada62e8a83bc429dfe1a4cecd84f8, type: 2}
-  width: 100
-  height: 100
-  renderDistance: 45
+  width: 50
+  height: 50
+  renderDistance: 30
   wallThickness: 2
 --- !u!4 &830471997
 Transform:
