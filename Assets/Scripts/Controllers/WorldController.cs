@@ -20,7 +20,7 @@ public class WorldController : MonoBehaviour {
     // ensures, that there is only ONE worldController
     public static WorldController Instance { get; protected set; }
     public        World           world    { get; protected set; }
-    public        PlayerCharacter       player   { get; protected set; }
+    public        PlayerCharacter player   { get; protected set; }
     public        List<Character> npcs     { get; protected set; }
 
     void OnEnable() {
@@ -73,7 +73,7 @@ public class WorldController : MonoBehaviour {
 
         // The Player itself.
         // Parameters are SpawnTile, (max)health, (max)saturation, (max)stamina
-        player = new PlayerCharacter(world.GetTileAt(1, 1), 20, 30, 40);
+        player = new PlayerCharacter(world.GetTileAt(1, 1), 20, 30, 40, 10);
 
         
     }

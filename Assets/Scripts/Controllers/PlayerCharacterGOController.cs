@@ -5,18 +5,22 @@ public class PlayerCharacterGOController : MonoBehaviour {
 
     public GameObject player_GO;
 
-    public PlayerCharacterGOController() {
-        Debug.Log("PlayerCharacterGOController");
-        player_GO = Instantiate(WorldController.Instance.character);
+    void Start() {
+
     }
 
-
     void Update() {
-        //player_GO.transform.position = WorldController.Instance.player.position;
-        Debug.Log("BlaBlaBla");
+        
     }
 
     void FixedUpdate() {
 
+    }
+
+    public void CreateCharacterGameObject(Tile t) {
+        Debug.Log("Created CharacterGameObject");
+        player_GO = Instantiate(WorldController.Instance.character.gameObject);
+        player_GO.transform.position = new Vector3(t.x * WorldController.Instance.wallThickness, 1.5f, t.z * WorldController.Instance.wallThickness);
+        player_GO.transform.SetParent(this.transform);
     }
 }
