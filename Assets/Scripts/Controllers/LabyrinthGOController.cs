@@ -77,7 +77,7 @@ public class LabyrinthGOController : MonoBehaviour {
             else {
                 //wall.gameObject.GetComponent<MeshRenderer>().enabled = false;
                 wall.gameObject.SetActive(false);
-                //wall.gameObject.SetActive(true);
+                wall.gameObject.SetActive(true);
             }
         }
 
@@ -85,12 +85,11 @@ public class LabyrinthGOController : MonoBehaviour {
             if ((Mathf.Abs(floor.transform.position.x - character.transform.position.x) + Mathf.Abs(floor.transform.position.z - character.transform.position.z)) < WorldController.Instance.renderDistance) {
                 //floor.gameObject.GetComponent<MeshRenderer>().enabled = true;
                 floor.gameObject.SetActive(true);
-                Debug.Log("Test");
             }
             else {
                 //floor.gameObject.GetComponent<MeshRenderer>().enabled = false;
                 floor.gameObject.SetActive(false);
-                //floor.gameObject.SetActive(true);
+                floor.gameObject.SetActive(true);
             }
         }
     }

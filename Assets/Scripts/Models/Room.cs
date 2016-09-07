@@ -37,9 +37,9 @@ public class Room {
 
     void AddTilesToLists() {
 
-        for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < 1; j++) {
-                if (1==1) {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                if () {
 
                 }
             }
