@@ -686,7 +686,7 @@ MonoBehaviour:
   character: {fileID: 1000012231903878, guid: acaada62e8a83bc429dfe1a4cecd84f8, type: 2}
   width: 50
   height: 50
-  renderDistance: 30
+  renderDistance: 45
   wallThickness: 2
 --- !u!4 &830471997
 Transform:

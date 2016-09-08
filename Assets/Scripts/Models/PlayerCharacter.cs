@@ -11,7 +11,7 @@ public class PlayerCharacter : Character {
     public int stamina;
 
     // visuals of the Character
-    PlayerCharacterGOController pcgoC;
+    public PlayerCharacterGOController pcgoC;
 
     public PlayerCharacter(Tile tile, int _health, int _saturation, int _stamina, int inventorySpace): base(tile, _health) {
 

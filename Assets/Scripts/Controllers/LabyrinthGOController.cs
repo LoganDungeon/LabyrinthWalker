@@ -11,8 +11,6 @@ public class LabyrinthGOController : MonoBehaviour {
     GameObject wallParent;
     GameObject floorParent;
 
-    GameObject character;
-
     // World
     World world {
         get {
@@ -24,11 +22,6 @@ public class LabyrinthGOController : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        
-
-        character = GameObject.FindGameObjectWithTag("Player");
-        //Debug.Log("Character created at: " + character.transform.position.x.ToString() + "_" + character.transform.position.z.ToString() );
-
         wallParent = new GameObject("WallParent");
         floorParent = new GameObject("FloorParent");
 
@@ -66,30 +59,30 @@ public class LabyrinthGOController : MonoBehaviour {
         }
     }
 
-    void asdFixedUpdate() {
-        //Debug.Log("FixedUpdate");
+    void FixedUpdate() {
+        // Position of the Player
+        Transform playerTransform = WorldController.Instance.player.pcgoC.player_GO.transform;
 
+        // currently calculated with manhattan distance
         foreach (Transform wall in wallParent.transform) {
-            if ((Mathf.Abs(wall.transform.position.x - character.transform.position.x) + Mathf.Abs(wall.transform.position.z - character.transform.position.z)) < WorldController.Instance.renderDistance) {
+            if ((Mathf.Abs(wall.transform.position.x - playerTransform.position.x) + Mathf.Abs(wall.transform.position.z - playerTransform.position.z)) < WorldController.Instance.renderDistance) {
                 //wall.gameObject.GetComponent<MeshRenderer>().enabled = true;
                 wall.gameObject.SetActive(true);
             }
             else {
                 //wall.gameObject.GetComponent<MeshRenderer>().enabled = false;
                 wall.gameObject.SetActive(false);
-                wall.gameObject.SetActive(true);
             }
         }
 
         foreach (Transform floor in floorParent.transform) {
-            if ((Mathf.Abs(floor.transform.position.x - character.transform.position.x) + Mathf.Abs(floor.transform.position.z - character.transform.position.z)) < WorldController.Instance.renderDistance) {
+            if ((Mathf.Abs(floor.transform.position.x - playerTransform.position.x) + Mathf.Abs(floor.transform.position.z - playerTransform.position.z)) < WorldController.Instance.renderDistance) {
                 //floor.gameObject.GetComponent<MeshRenderer>().enabled = true;
                 floor.gameObject.SetActive(true);
             }
             else {
                 //floor.gameObject.GetComponent<MeshRenderer>().enabled = false;
                 floor.gameObject.SetActive(false);
-                floor.gameObject.SetActive(true);
             }
         }
     }
