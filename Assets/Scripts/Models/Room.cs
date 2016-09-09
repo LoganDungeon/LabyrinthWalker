@@ -16,13 +16,13 @@ using System.Collections.Generic;
 
 public class Room {
 
-    Tile lowerTile;
-    Tile upperTile;
+    public Tile lowerTile;
+    public Tile upperTile;
 
     // Tiles, that are IN the room, but at the edge of the room
-    List<Tile> edgeTiles;
+    public List<Tile> edgeTiles;
     // Tiles, that are IN the room, and not at the edge of the room
-    List<Tile> innerTiles;
+    public List<Tile> innerTiles;
 
     public Room(Tile leftUnderTile, Tile rightUpperTile) {
 
@@ -37,10 +37,12 @@ public class Room {
 
     void AddTilesToLists() {
 
-        for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < 1; j++) {
-                if (true) {
-
+        for (int x = lowerTile.x; x < upperTile.x + 1; x++) {
+            for (int z = lowerTile.z; z < upperTile.z + 1; z++) {
+                if (x == lowerTile.x || x == upperTile.x || z == lowerTile.z || z == upperTile.z) {
+                    edgeTiles.Add(WorldController.Instance.world.GetTileAt(x, z));
+                }else {
+                    innerTiles.Add(WorldController.Instance.world.GetTileAt(x, z));
                 }
             }
         }

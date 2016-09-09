@@ -22,6 +22,7 @@ public class WorldController : MonoBehaviour {
     public        World           world    { get; protected set; }
     public        PlayerCharacter player   { get; protected set; }
     public        List<Character> npcs     { get; protected set; }
+    public        List<Room>      rooms    { get; protected set; }
 
     void OnEnable() {
         if(Instance != null) {
@@ -68,8 +69,13 @@ public class WorldController : MonoBehaviour {
         world = new World(width, height);
         //Debug.Log("WorldController: World was created");
 
+
+
         MazeGenerator mg = new MazeGenerator();
         mg.CreateMaze();
+
+        // Room
+        rooms = new List<Room>();
 
         // The Player itself.
         // Parameters are SpawnTile, (max)health, (max)saturation, (max)stamina
@@ -79,7 +85,6 @@ public class WorldController : MonoBehaviour {
     }
 
     void Update() {
-
         // JUST FOR TESTING PURPOSES
         if (Input.GetKeyDown(KeyCode.X)) {
             player.health--;
