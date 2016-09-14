@@ -5,39 +5,27 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class MazeGenerator {
+public static class MazeGenerator {
 
-    
-
-    World world {
-        get {
-            return WorldController.Instance.world;
-        }
-    }
-
-    public MazeGenerator() {
-
-    }
-
-    public void CreateMaze() {
+    public static void CreateMaze() {
         Tile currentTile;
         Tile nextTile;
         Stack<Tile> visitedTiles = new Stack<Tile>();
-        int randX = Random.Range(1, world.Width - 1);
-        int randZ = Random.Range(1, world.Height - 1);
+        int randX = Random.Range(1, WorldController.Instance.world.Width - 1);
+        int randZ = Random.Range(1, WorldController.Instance.world.Height - 1);
         // first i will get a random tile to start from
         while (randX % 2 == 0) {
-            randX = Random.Range(1, world.Width - 1);
+            randX = Random.Range(1, WorldController.Instance.world.Width - 1);
         }
         while (randZ % 2 == 0) {
-            randZ = Random.Range(1, world.Height - 1);
+            randZ = Random.Range(1, WorldController.Instance.world.Height - 1);
         }
 
         //Debug.Log("Starttile: " + randX + "_" + randZ);
 
         //===== FIRST STEP =====//
         // set the starting tile
-        currentTile = world.GetTileAt(randX, randZ);
+        currentTile = WorldController.Instance.world.GetTileAt(randX, randZ);
         // mark the startingTile as visited
         currentTile.visited = true;
         currentTile.wall = false;
@@ -77,11 +65,11 @@ public class MazeGenerator {
         }    
     }
 
-    bool AreThereUnvisitedTiles() {
+    static bool AreThereUnvisitedTiles() {
         // go through all of the tiles and return true, if there is at least one unvisited tile
-        for (int i = 1; i < world.Width; i+=2) {
-            for (int j = 1; j < world.Height; j+=2) {
-                if(world.GetTileAt(i, j).visited == false) {
+        for (int i = 1; i < WorldController.Instance.world.Width; i+=2) {
+            for (int j = 1; j < WorldController.Instance.world.Height; j+=2) {
+                if(WorldController.Instance.world.GetTileAt(i, j).visited == false) {
                     return true;
                 }
             }
@@ -89,37 +77,28 @@ public class MazeGenerator {
         return false;
     }
 
-    List<Tile> GetNeighbours(Tile tile) {
+    static List<Tile> GetNeighbours(Tile tile) {
         List<Tile> neighbours = new List<Tile>();
         // add the north tile
-        if (tile.z < world.Height - 3 && world.GetTileAt(tile.x, tile.z + 2).visited == false) {
-            neighbours.Add(world.GetTileAt(tile.x, tile.z + 2));
+        if (tile.z < WorldController.Instance.world.Height - 3 && WorldController.Instance.world.GetTileAt(tile.x, tile.z + 2).visited == false) {
+            neighbours.Add(WorldController.Instance.world.GetTileAt(tile.x, tile.z + 2));
         }
         // add the east tile
-        if (tile.x < world.Width - 3 && world.GetTileAt(tile.x + 2, tile.z).visited == false) {
-            neighbours.Add(world.GetTileAt(tile.x + 2, tile.z));
+        if (tile.x < WorldController.Instance.world.Width - 3 && WorldController.Instance.world.GetTileAt(tile.x + 2, tile.z).visited == false) {
+            neighbours.Add(WorldController.Instance.world.GetTileAt(tile.x + 2, tile.z));
         }
         // add the south tile
-        if (tile.z >= 3 && world.GetTileAt(tile.x, tile.z - 2).visited == false) {
-            neighbours.Add(world.GetTileAt(tile.x, tile.z - 2));
+        if (tile.z >= 3 && WorldController.Instance.world.GetTileAt(tile.x, tile.z - 2).visited == false) {
+            neighbours.Add(WorldController.Instance.world.GetTileAt(tile.x, tile.z - 2));
         }
         // add the west tile
-        if (tile.x >= 3 && world.GetTileAt(tile.x - 2, tile.z).visited == false) {
-            neighbours.Add(world.GetTileAt(tile.x - 2, tile.z));
+        if (tile.x >= 3 && WorldController.Instance.world.GetTileAt(tile.x - 2, tile.z).visited == false) {
+            neighbours.Add(WorldController.Instance.world.GetTileAt(tile.x - 2, tile.z));
         }
         return neighbours;
     }
 
-    Tile GetMiddleTile( Tile currentTile, Tile nextTile ) {
-        return world.GetTileAt( (currentTile.x + nextTile.x)/2, (currentTile.z + nextTile.z)/2 );
+    static Tile GetMiddleTile( Tile currentTile, Tile nextTile ) {
+        return WorldController.Instance.world.GetTileAt( (currentTile.x + nextTile.x)/2, (currentTile.z + nextTile.z)/2 );
     }
-
-
-
-
-
-
-
-
-
 }

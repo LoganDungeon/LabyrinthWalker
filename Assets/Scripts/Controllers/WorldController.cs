@@ -69,10 +69,8 @@ public class WorldController : MonoBehaviour {
         world = new World(width, height);
         //Debug.Log("WorldController: World was created");
 
-
-
-        MazeGenerator mg = new MazeGenerator();
-        mg.CreateMaze();
+        // Create the Maze
+        MazeGenerator.CreateMaze();
 
         // Room
         rooms = new List<Room>();
