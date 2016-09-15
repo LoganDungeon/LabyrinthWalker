@@ -69,11 +69,12 @@ public class WorldController : MonoBehaviour {
         world = new World(width, height);
         //Debug.Log("WorldController: World was created");
 
-        // Create the Maze
-        MazeGenerator.CreateMaze();
-
         // Room
         rooms = new List<Room>();
+        rooms.Add(new Room(Instance.world.GetTileAt(3,3), Instance.world.GetTileAt(21,11)));
+
+        // Create the Maze
+        MazeGenerator.CreateMaze();
 
         // The Player itself.
         // Parameters are SpawnTile, (max)health, (max)saturation, (max)stamina
