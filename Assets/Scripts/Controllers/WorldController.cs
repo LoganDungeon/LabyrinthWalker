@@ -71,10 +71,13 @@ public class WorldController : MonoBehaviour {
 
         // Room
         rooms = new List<Room>();
-        rooms.Add(new Room(Instance.world.GetTileAt(3,3), Instance.world.GetTileAt(21,11)));
+        //rooms.Add(new Room(Instance.world.GetTileAt(3,3), Instance.world.GetTileAt(21,11)));
+        //Debug.Log("XLength: " + rooms[0].XLength);
+        //Debug.Log("ZLength: " + rooms[0].ZLength);
+        rooms = MapGenerator.CreateRooms();
 
         // Create the Maze
-        MazeGenerator.CreateMaze();
+        MapGenerator.CreateMaze();
 
         // The Player itself.
         // Parameters are SpawnTile, (max)health, (max)saturation, (max)stamina
@@ -94,11 +97,11 @@ public class WorldController : MonoBehaviour {
         }
     }
 
-    public void CreateCharacter( Tile t ) {
-                GameObject ch = MonoBehaviour.Instantiate(character);
-                ch.transform.position = new Vector3(t.x + (float)wallThickness / 2, 1, t.z + (float)wallThickness / 2);
-                Debug.Log("Character visuals created at: "+ ch.transform.position.x + "_" + ch.transform.position.z);
-    }
+/*    public void CreateCharacter( Tile t ) {
+        GameObject ch = MonoBehaviour.Instantiate(character);
+        ch.transform.position = new Vector3(t.x + (float)wallThickness / 2, 1, t.z + (float)wallThickness / 2);
+        Debug.Log("Character visuals created at: " + ch.transform.position.x + "_" + ch.transform.position.z);
+    }*/
 
     void Die() {
         Debug.Log("YOU DIED!!!!");

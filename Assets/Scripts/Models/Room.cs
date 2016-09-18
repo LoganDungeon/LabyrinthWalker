@@ -19,6 +19,20 @@ public class Room {
     public Tile lowerTile;
     public Tile upperTile;
 
+    public int XLength {
+        get {
+            return upperTile.x - lowerTile.x + 1;
+        }
+        protected set { }
+    }
+
+    public int ZLength {
+        get {
+            return upperTile.z - lowerTile.z + 1;
+        }
+        protected set { }
+    }
+
     // Tiles, that are IN the room, but at the edge of the room
     public List<Tile> edgeTiles;
     // Tiles, that are IN the room, and not at the edge of the room
@@ -37,7 +51,8 @@ public class Room {
         // change the tiles to be wall fre
         ClearRoom();
 
-        AddEntrances(1);
+        // For now i want to add between 1 and 4 entrances, Later on i maybe want to create entrances, based on the size of the room
+        //AddEntrances(Random.Range(1,5));
     }
 
     void AddTilesToLists() {
@@ -74,6 +89,10 @@ public class Room {
         }
 
         for (int i = 0; i < entrancesNumber; i++) {
+            // check if there are possible entrance Tiles left over
+            if (possibleEntranceTiles.Count == 0) {
+                return;
+            }
             // chose a random tile for the entrance and create the entrance, aka delete the wall
             int temp = Random.Range(0, possibleEntranceTiles.Count);
             possibleEntranceTiles[temp].visited = false;
