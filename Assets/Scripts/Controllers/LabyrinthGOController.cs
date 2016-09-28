@@ -8,6 +8,9 @@ public class LabyrinthGOController : MonoBehaviour {
     public Material wallMaterial;
     public Material floorMaterial;
 
+    // maybe just for develop purposes
+    public bool renderAll = false;
+
     GameObject wallParent;
     GameObject floorParent;
 
@@ -89,25 +92,27 @@ public class LabyrinthGOController : MonoBehaviour {
         Transform playerTransform = WorldController.Instance.player.pcgoC.player_GO.transform;
 
         // currently calculated with manhattan distance
-        foreach (Transform wall in wallParent.transform) {
-            if ((Mathf.Abs(wall.transform.position.x - playerTransform.position.x) + Mathf.Abs(wall.transform.position.z - playerTransform.position.z)) < WorldController.Instance.renderDistance) {
-                //wall.gameObject.GetComponent<MeshRenderer>().enabled = true;
-                wall.gameObject.SetActive(true);
+        if (!renderAll) {
+            foreach (Transform wall in wallParent.transform) {
+                if ((Mathf.Abs(wall.transform.position.x - playerTransform.position.x) + Mathf.Abs(wall.transform.position.z - playerTransform.position.z)) < WorldController.Instance.renderDistance) {
+                    //wall.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                    wall.gameObject.SetActive(true);
+                }
+                else {
+                    //wall.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    wall.gameObject.SetActive(false);
+                }
             }
-            else {
-                //wall.gameObject.GetComponent<MeshRenderer>().enabled = false;
-                wall.gameObject.SetActive(false);
-            }
-        }
 
-        foreach (Transform floor in floorParent.transform) {
-            if ((Mathf.Abs(floor.transform.position.x - playerTransform.position.x) + Mathf.Abs(floor.transform.position.z - playerTransform.position.z)) < WorldController.Instance.renderDistance) {
-                //floor.gameObject.GetComponent<MeshRenderer>().enabled = true;
-                floor.gameObject.SetActive(true);
-            }
-            else {
-                //floor.gameObject.GetComponent<MeshRenderer>().enabled = false;
-                floor.gameObject.SetActive(false);
+            foreach (Transform floor in floorParent.transform) {
+                if ((Mathf.Abs(floor.transform.position.x - playerTransform.position.x) + Mathf.Abs(floor.transform.position.z - playerTransform.position.z)) < WorldController.Instance.renderDistance) {
+                    //floor.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                    floor.gameObject.SetActive(true);
+                }
+                else {
+                    //floor.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    floor.gameObject.SetActive(false);
+                }
             }
         }
     }

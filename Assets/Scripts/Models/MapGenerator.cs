@@ -5,21 +5,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class MazeGenerator {
+public static class MapGenerator {
 
-    
+    private static World world = WorldController.Instance.world;
 
-    World world {
-        get {
-            return WorldController.Instance.world;
-        }
-    }
-
-    public MazeGenerator() {
-
-    }
-
-    public void CreateMaze() {
+    public static void CreateMaze() {
         Tile currentTile;
         Tile nextTile;
         Stack<Tile> visitedTiles = new Stack<Tile>();
@@ -77,7 +67,7 @@ public class MazeGenerator {
         }    
     }
 
-    bool AreThereUnvisitedTiles() {
+    static bool AreThereUnvisitedTiles() {
         // go through all of the tiles and return true, if there is at least one unvisited tile
         for (int i = 1; i < world.Width; i+=2) {
             for (int j = 1; j < world.Height; j+=2) {
@@ -89,7 +79,7 @@ public class MazeGenerator {
         return false;
     }
 
-    List<Tile> GetNeighbours(Tile tile) {
+    static List<Tile> GetNeighbours(Tile tile) {
         List<Tile> neighbours = new List<Tile>();
         // add the north tile
         if (tile.z < world.Height - 3 && world.GetTileAt(tile.x, tile.z + 2).visited == false) {
@@ -110,16 +100,54 @@ public class MazeGenerator {
         return neighbours;
     }
 
-    Tile GetMiddleTile( Tile currentTile, Tile nextTile ) {
-        return world.GetTileAt( (currentTile.x + nextTile.x)/2, (currentTile.z + nextTile.z)/2 );
+    static Tile GetMiddleTile( Tile currentTile, Tile nextTile ) {
+        return WorldController.Instance.world.GetTileAt( (currentTile.x + nextTile.x)/2, (currentTile.z + nextTile.z)/2 );
     }
 
+    public static List<Room> CreateRooms() {
 
+        List<Room> rooms = new List<Room>();
 
+        // number of the atempts, how often the algorithm will try to place valid rooms
+        int atempts = Mathf.FloorToInt(Mathf.Sqrt(WorldController.Instance.world.Height * WorldController.Instance.world.Width));
 
+        // size of the rooms will be between 3 and a certain calculated value based on the world width/height
+        int minRoomHeight = 3;
+        int minRoomWidth= 3;
+        int maxRoomHeight = (Mathf.FloorToInt(Mathf.Pow(Mathf.Pow(world.Height, 2f), 1 / 3f) - (Mathf.Sqrt((Mathf.Pow(Mathf.Pow(world.Height, 2f), 1 / 3f))))));
+        int maxRoomWidth  = (Mathf.FloorToInt(Mathf.Pow(Mathf.Pow(world.Width, 2f), 1 / 3f) - (Mathf.Sqrt((Mathf.Pow(Mathf.Pow(world.Width, 2f), 1 / 3f)))))); ;
 
+        if (maxRoomHeight % 2 == 0)
+            maxRoomHeight++;
+        if (maxRoomWidth % 2 == 0)
+            maxRoomWidth++;
 
+        // try to place rooms by the number of atempts
+        for (int i = 0; i < atempts; i++) {
+            // first determine what size the next room will have
+            int roomHeight = 0;
+            int roomWidth = 0;
+            while (roomHeight % 2 == 0)
+                roomHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
+            while (roomWidth % 2 == 0)
+                roomWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
 
+            // create a random starttile for the room
+            int tileX = 0;
+            int tileZ = 0;
+            while (tileX % 2 == 0)
+                tileX = Random.Range(0, world.Height);
+            while (tileZ % 2 == 0)
+                tileZ = Random.Range(0, world.Width);
+            // now we have a valid startTile
+        }
+        
 
+        //rooms.Add(new Room(
+        //        world.GetTileAt(tileX, tileZ),
+        //        world.GetTileAt(tileX + Random.Range(minRoomHeight, maxRoomHeight + 1), tileZ + Random.Range(minRoomWidth, maxRoomWidth + 1))
+        //    ));
 
+        return rooms;
+    }
 }
