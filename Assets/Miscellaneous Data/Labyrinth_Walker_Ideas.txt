@@ -53,4 +53,13 @@ idea of the algorithm:
 	- contains a rectangle with odd sides of tiles
 	- minimum Height and Width of a room is 3
 	- maximum Height and Width of a room is (for now just floor(4sqrt(H or W))) (if %2==0, then add 1)
-	- 
+
+Create meshes for the tiles:
+	- if the tile is a floor, then create a Floor and a Ceiling mesh
+	- when the tile is a wall, create a wall mesh:
+		- Method takes Arguments:
+			(Position,
+			NTile(bool, true if there is a wall)
+			ETile,
+			STile,
+			WTile)
