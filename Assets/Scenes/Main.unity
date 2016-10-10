@@ -1371,6 +1371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallMaterial: {fileID: 2100000, guid: e91cdec53d2778541adbc2c3e8edf4a8, type: 2}
   floorMaterial: {fileID: 2100000, guid: fc3376e0538bf4745b72469ebb08482e, type: 2}
+  renderAll: 1
 --- !u!4 &2108188705
 Transform:
   m_ObjectHideFlags: 0

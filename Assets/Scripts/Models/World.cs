@@ -28,10 +28,10 @@ public class World {
         // set the current World to be this world
         current = this;
 
-        this.Width = width;
-        this.Height = height;
+        Width = width;
+        Height = height;
 
-        this.tiles = new Tile[width, height];
+        tiles = new Tile[width, height];
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {

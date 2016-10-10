@@ -90,6 +90,7 @@ public class LabyrinthGOController : MonoBehaviour {
     void FixedUpdate() {
         // Position of the Player
         Transform playerTransform = WorldController.Instance.player.pcgoC.player_GO.transform;
+        
 
         // currently calculated with manhattan distance
         if (!renderAll) {

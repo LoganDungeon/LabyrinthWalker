@@ -77,7 +77,7 @@ public class WorldController : MonoBehaviour {
         rooms = MapGenerator.CreateRooms();
 
         // Create the Maze
-        MapGenerator.CreateMaze();
+        //MapGenerator.CreateMaze();
 
         // The Player itself.
         // Parameters are SpawnTile, (max)health, (max)saturation, (max)stamina

@@ -13,6 +13,8 @@ public class Tile {
     // declares if the tile was already visited by the depth first search algorithm
     public bool visited;
 
+    // asd
+    public bool isInRoom;
 
     // Coordinates;
     public int x;
@@ -23,6 +25,7 @@ public class Tile {
         this.z = z;
         this.wall = true;
         this.visited = false;
+        this.isInRoom = false;
 
         //Debug.Log("Tile_" + x + "_" + z + " created");
     }

@@ -19,6 +19,12 @@ public class Room {
     public Tile lowerTile;
     public Tile upperTile;
 
+    World world {
+        get {
+            return WorldController.Instance.world;
+        }
+    }
+
     public int XLength {
         get {
             return upperTile.x - lowerTile.x + 1;
@@ -52,7 +58,7 @@ public class Room {
         ClearRoom();
 
         // For now i want to add between 1 and 4 entrances, Later on i maybe want to create entrances, based on the size of the room
-        //AddEntrances(Random.Range(1,5));
+        AddEntrances(Random.Range(1,5));
     }
 
     void AddTilesToLists() {
@@ -60,9 +66,9 @@ public class Room {
         for (int x = lowerTile.x; x <= upperTile.x; x++) {
             for (int z = lowerTile.z; z <= upperTile.z; z++) {
                 if (x == lowerTile.x || x == upperTile.x || z == lowerTile.z || z == upperTile.z) {
-                    edgeTiles.Add(WorldController.Instance.world.GetTileAt(x, z));
+                    edgeTiles.Add(world.GetTileAt(x, z));
                 }else {
-                    innerTiles.Add(WorldController.Instance.world.GetTileAt(x, z));
+                    innerTiles.Add(world.GetTileAt(x, z));
                 }
             }
         }
@@ -72,8 +78,10 @@ public class Room {
 
         for (int x = lowerTile.x; x <= upperTile.x; x++) {
             for (int z = lowerTile.z; z <= upperTile.z; z++) {
-                WorldController.Instance.world.GetTileAt(x, z).wall = false;
-                WorldController.Instance.world.GetTileAt(x, z).visited = true;
+                Tile t = world.GetTileAt(x, z);
+                t.wall = false;
+                t.visited = true;
+                t.isInRoom = true;
             }
         }
     }
@@ -93,9 +101,9 @@ public class Room {
             if (possibleEntranceTiles.Count == 0) {
                 return;
             }
-            // chose a random tile for the entrance and create the entrance, aka delete the wall
+            // chose a random tile for the entrance and create the entrance, aka mark it as "not in the room", so the maze Generator can go out of the room again.
             int temp = Random.Range(0, possibleEntranceTiles.Count);
-            possibleEntranceTiles[temp].visited = false;
+            possibleEntranceTiles[temp].isInRoom = false;
             possibleEntranceTiles.RemoveAt(temp);
         }
     }
