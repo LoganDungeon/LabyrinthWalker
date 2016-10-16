@@ -15,13 +15,16 @@ public static class MapGenerator {
         Stack<Tile> visitedTiles = new Stack<Tile>();
         int randX = Random.Range(1, world.Width - 1);
         int randZ = Random.Range(1, world.Height - 1);
-        // first i will get a random tile to start from
-        while (randX % 2 == 0) {
-            randX = Random.Range(1, world.Width - 1);
+        // first i will get a random tile to start from, which has not been "visited" yet (outside of a room)
+        do {
+            while (randX % 2 == 0) {
+                randX = Random.Range(1, world.Width - 1);
+            }
+            while (randZ % 2 == 0) {
+                randZ = Random.Range(1, world.Height - 1);
+            }
         }
-        while (randZ % 2 == 0) {
-            randZ = Random.Range(1, world.Height - 1);
-        }
+        while (world.GetTileAt(randX, randZ).visited == true);
 
         //Debug.Log("Starttile: " + randX + "_" + randZ);
 
@@ -46,15 +49,19 @@ public static class MapGenerator {
             List<Tile> neighbours = new List<Tile>();
             // there are 2 possibilities:
             // 1. we are not in a room:
+            /*
             if (!currentTile.isInRoom) {
                 neighbours = GetCorridorNeighbours(currentTile);
             }
+            
             // 2. we are in a room:
             else {
                 /*/
-                 * HIER WEITER
+//                 * HIER WEITER
                 /*/ 
             }
+            */
+            neighbours = GetNeighbours(currentTile);
             // Check if the current Tile has any unvisited neighbours
             if (neighbours.Count > 0) {
                 //=1=//
@@ -90,22 +97,22 @@ public static class MapGenerator {
         return false;
     }
 
-    static List<Tile> GetCorridorNeighbours( Tile tile) {
+    static List<Tile> GetNeighbours( Tile tile) {
         List<Tile> neighbours = new List<Tile>();
         // add the north tile
-        if (tile.z < world.Height - 3 && world.GetTileAt(tile.x, tile.z + 2).visited == false) {
+        if ((tile.z < world.Height - 3 && world.GetTileAt(tile.x, tile.z + 2).visited == false) && GetMiddleTile(tile, world.GetTileAt(tile.x, tile.z + 2)).isRoomWall == false) {
             neighbours.Add(world.GetTileAt(tile.x, tile.z + 2));
         }
         // add the east tile
-        if (tile.x < world.Width - 3 && world.GetTileAt(tile.x + 2, tile.z).visited == false) {
+        if ((tile.x < world.Width - 3 && world.GetTileAt(tile.x + 2, tile.z).visited == false) && GetMiddleTile(tile, world.GetTileAt(tile.x + 2, tile.z)).isRoomWall == false) {
             neighbours.Add(world.GetTileAt(tile.x + 2, tile.z));
         }
         // add the south tile
-        if (tile.z >= 3 && world.GetTileAt(tile.x, tile.z - 2).visited == false) {
+        if ((tile.z >= 3 && world.GetTileAt(tile.x, tile.z - 2).visited == false) && GetMiddleTile(tile, world.GetTileAt(tile.x, tile.z - 2)).isRoomWall == false) {
             neighbours.Add(world.GetTileAt(tile.x, tile.z - 2));
         }
         // add the west tile
-        if (tile.x >= 3 && world.GetTileAt(tile.x - 2, tile.z).visited == false) {
+        if ((tile.x >= 3 && world.GetTileAt(tile.x - 2, tile.z).visited == false) && GetMiddleTile(tile, world.GetTileAt(tile.x - 2, tile.z)).isRoomWall == false) {
             neighbours.Add(world.GetTileAt(tile.x - 2, tile.z));
         }
         return neighbours;

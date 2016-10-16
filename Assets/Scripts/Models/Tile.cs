@@ -14,7 +14,7 @@ public class Tile {
     public bool visited;
 
     // asd
-    public bool isInRoom;
+    public bool isRoomWall;
 
     // Coordinates;
     public int x;
@@ -25,7 +25,7 @@ public class Tile {
         this.z = z;
         this.wall = true;
         this.visited = false;
-        this.isInRoom = false;
+        this.isRoomWall = false;
 
         //Debug.Log("Tile_" + x + "_" + z + " created");
     }

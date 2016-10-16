@@ -29,14 +29,12 @@ public class Room {
         get {
             return upperTile.x - lowerTile.x + 1;
         }
-        protected set { }
     }
 
     public int ZLength {
         get {
             return upperTile.z - lowerTile.z + 1;
         }
-        protected set { }
     }
 
     // Tiles, that are IN the room, but at the edge of the room
@@ -55,7 +53,7 @@ public class Room {
         AddTilesToLists();
 
         // change the tiles to be wall fre
-        ClearRoom();
+        CreateRoom();
 
         // For now i want to add between 1 and 4 entrances, Later on i maybe want to create entrances, based on the size of the room
         AddEntrances(Random.Range(1,5));
@@ -74,20 +72,25 @@ public class Room {
         }
     }
 
-    void ClearRoom() {
+    void CreateRoom() {
 
-        for (int x = lowerTile.x; x <= upperTile.x; x++) {
-            for (int z = lowerTile.z; z <= upperTile.z; z++) {
+        for (int x = lowerTile.x-1; x <= upperTile.x+1; x++) {
+            for (int z = lowerTile.z-1; z <= upperTile.z+1; z++) {
                 Tile t = world.GetTileAt(x, z);
-                t.wall = false;
-                t.visited = true;
-                t.isInRoom = true;
+                if ( x==lowerTile.x-1 || x==upperTile.x+1 || z==lowerTile.z-1 || z==upperTile.z+1 ) {
+                    // This are the walls of the room
+                    t.isRoomWall = true;
+                }
+                else{
+                    t.wall = false;
+                    //t.visited = true;
+                    //t.isInRoom = true;
+                }
             }
         }
     }
 
     void AddEntrances(int entrancesNumber) {
-
         List<Tile> possibleEntranceTiles = new List<Tile>();
 
         foreach (Tile tile in edgeTiles) {
@@ -103,7 +106,95 @@ public class Room {
             }
             // chose a random tile for the entrance and create the entrance, aka mark it as "not in the room", so the maze Generator can go out of the room again.
             int temp = Random.Range(0, possibleEntranceTiles.Count);
-            possibleEntranceTiles[temp].isInRoom = false;
+            //possibleEntranceTiles[temp].visited = false;
+            //possibleEntranceTiles[temp].visited = false;
+            // 8 possibilities:
+            //  - 4 corners
+            //  - 4 edges
+            
+            // 1 corner, left  lower
+            if (possibleEntranceTiles[temp].x==lowerTile.x && possibleEntranceTiles[temp].z == lowerTile.z) {
+                // we are on a corner, so there are 2 possible entrances
+                int rand = Random.Range(0, 2);
+                if (rand == 0) {
+                    world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).isRoomWall = false;
+                    world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).wall = false;
+                }
+                else if (rand == 1) {
+                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).isRoomWall = false;
+                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).wall = false;
+                }
+                continue;
+            }
+            // 2 corner, left  upper
+            if (possibleEntranceTiles[temp].x == lowerTile.x && possibleEntranceTiles[temp].z == upperTile.z) {
+                // we are on a corner, so there are 2 possible entrances
+                int rand = Random.Range(0, 2);
+                if (rand == 0) {
+                    world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).isRoomWall = false;
+                    world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).wall = false;
+                }
+                else if (rand == 1) {
+                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).isRoomWall = false;
+                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).wall = false;
+                }
+                continue;
+            }
+            // 3 corner, right lower
+            if (possibleEntranceTiles[temp].x == upperTile.x && possibleEntranceTiles[temp].z == lowerTile.z) {
+                // we are on a corner, so there are 2 possible entrances
+                int rand = Random.Range(0, 2);
+                if (rand == 0) {
+                    world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).isRoomWall = false;
+                    world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).wall = false;
+                }
+                else if (rand == 1) {
+                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).isRoomWall = false;
+                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).wall = false;
+                }
+                continue;
+            }
+            // 4 corner, right upper
+            if (possibleEntranceTiles[temp].x == upperTile.x && possibleEntranceTiles[temp].z == upperTile.z) {
+                // we are on a corner, so there are 2 possible entrances
+                int rand = Random.Range(0, 2);
+                if (rand == 0) {
+                    world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).isRoomWall = false;
+                    world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).wall = false;
+                }
+                else if (rand == 1) {
+                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).isRoomWall = false;
+                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).wall = false;
+                }
+                continue;
+            }
+            // 5 edge, left
+            if (possibleEntranceTiles[temp].x == lowerTile.x) {
+                // we are on an edge, so there is 1 possible entrances
+                world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).isRoomWall = false;
+                world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).wall = false;
+                continue;
+            }
+            // 6 edge, upper
+            if (possibleEntranceTiles[temp].z == upperTile.z) {
+                world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).isRoomWall = false;
+                world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).wall = false;
+                continue;
+            }
+            // 7 edge, right
+            if (possibleEntranceTiles[temp].x == upperTile.x) {
+                // we are on a corner, so there is 1 possible entrances
+                world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).isRoomWall = false;
+                world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).wall = false;
+                continue;
+            }
+            // 8 edge, lower
+            if (possibleEntranceTiles[temp].z == lowerTile.z) {
+                // we are on a corner, so there are 2 possible entrances
+                world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).isRoomWall = false;
+                world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).wall = false;
+                continue;
+            }
             possibleEntranceTiles.RemoveAt(temp);
         }
     }

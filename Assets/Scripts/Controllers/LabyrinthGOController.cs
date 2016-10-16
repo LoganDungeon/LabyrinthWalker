@@ -14,6 +14,8 @@ public class LabyrinthGOController : MonoBehaviour {
     GameObject wallParent;
     GameObject floorParent;
 
+    float wallThickness;
+
     // World
     World world {
         get {
@@ -21,17 +23,16 @@ public class LabyrinthGOController : MonoBehaviour {
         }
     }
 
-    
-
     // Use this for initialization
     void Start() {
+        wallThickness = WorldController.Instance.wallThickness;
+
         wallParent = new GameObject("WallParent");
         floorParent = new GameObject("FloorParent");
 
         wallParent.transform.SetParent(this.transform);
         floorParent.transform.SetParent(this.transform);
 
-        float wallThickness = WorldController.Instance.wallThickness;
 
         for (int x = 0; x < world.Width; x++) {
             for (int z = 0; z < world.Height; z++) {
@@ -82,6 +83,29 @@ public class LabyrinthGOController : MonoBehaviour {
                     ceiling.transform.SetParent(floorParent.transform);
                     ceiling.transform.position = new Vector3(wallThickness * x, 0, wallThickness * z);
                     ceiling.GetComponent<Renderer>().material = floorMaterial;
+                }
+            }
+        }
+    }
+    
+    void OnDrawGizmosSelected() {
+        if(world == null) {
+            return;
+        }
+
+        for (int x = 0; x < world.Width; x++) {
+            for (int z = 0; z < world.Height; z++) {
+                if (world.GetTileAt(x, z).wall == true) {
+                    // Create a gizmo Cube, to better analyse the tiles
+                    // Wall will be blue
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawSphere( new Vector3((float)(wallThickness*x + 0.5*wallThickness), 2 * wallThickness, (float)(wallThickness * z + 0.5 * wallThickness) ), 0.5f);
+                }
+                else {
+                    // Create a gizmo Cube, to better analyse the tiles
+                    // Floor will be red
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawSphere(new Vector3((float)(wallThickness * x + 0.5 * wallThickness), 2 * wallThickness, (float)(wallThickness * z + 0.5 * wallThickness)), 0.5f);
                 }
             }
         }
