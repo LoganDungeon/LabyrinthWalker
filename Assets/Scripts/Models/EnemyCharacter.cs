@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyCharacter : Character {
+// every non Player Character in the game
+public class NPCharacter : Character {
 
-    public EnemyCharacter(Tile tile, int _health): base(tile, _health) {
+    // Creates an NPC at the tiles position
+    // TODO: will likely need more like and Inventory and such stuff
+    public NPCharacter(Tile tile, int _health): base(tile, _health) {
 
     }
 }

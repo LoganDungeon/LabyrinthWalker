@@ -17,7 +17,7 @@ public class WorldController : MonoBehaviour {
     // Thickness of the walls
     public float wallThickness;
 
-    // ensures, that there is only ONE worldController
+    // the Instance ensures, that there is only ONE worldController
     public static WorldController Instance { get; protected set; }
     public        World           world    { get; protected set; }
     public        PlayerCharacter player   { get; protected set; }
@@ -25,14 +25,18 @@ public class WorldController : MonoBehaviour {
     public        List<Room>      rooms    { get; protected set; }
 
     void OnEnable() {
+        // cheack if there is (for whatever reason) already an Instance of the WorldController
         if(Instance != null) {
             Debug.LogError("There can only be one Instance of the WorldController!");
         }
+        // if not, set the Instance to this WorldController
         Instance = this;
 
+        // then create the world
         CreateWorld();
     }
 
+    // creates the world with the given parameters
     void CreateWorld() {
         // check if the wallthickness is greater than 0
         if (wallThickness <= 0)
@@ -40,40 +44,30 @@ public class WorldController : MonoBehaviour {
         // check if height and width are positive
         if (height < 0) {
             height = Mathf.Abs(height);
-            //Debug.Log("Height made positive: " + height);
         }
         if (width < 0) {
             width = Mathf.Abs(width);
-            //Debug.Log("Width made positive: " + width);
         }
         // check if height and width are odd numbers.
         // if not, add one.
         if (height % 2 == 0) {
             height++;
-            //Debug.Log("Height increased: " + height);
         }
         if (width % 2 == 0) {
             width++;
-            //Debug.Log("Width increased: " + width);
         }
         // check if height and width are at least 5
         if (height < 5) {
             height = 5;
-            //Debug.Log("Height minimum: " + height);
         }
         if (width < 5) {
             width = 5;
-            //Debug.Log("Width minimum: " + width);
         }
         // Create the World with the given height and width
         world = new World(width, height);
-        //Debug.Log("WorldController: World was created");
-
-        // Room
+        
+        // create the rooms
         rooms = new List<Room>();
-        //rooms.Add(new Room(Instance.world.GetTileAt(3,3), Instance.world.GetTileAt(21,11)));
-        //Debug.Log("XLength: " + rooms[0].XLength);
-        //Debug.Log("ZLength: " + rooms[0].ZLength);
         rooms = MapGenerator.CreateRooms();
 
         // Create the Maze
@@ -82,8 +76,6 @@ public class WorldController : MonoBehaviour {
         // The Player itself.
         // Parameters are SpawnTile, (max)health, (max)saturation, (max)stamina
         player = new PlayerCharacter(world.GetTileAt(1, 1), 20, 30, 40, 10);
-
-        
     }
 
     void Update() {
@@ -96,13 +88,7 @@ public class WorldController : MonoBehaviour {
             Die();
         }
     }
-
-/*    public void CreateCharacter( Tile t ) {
-        GameObject ch = MonoBehaviour.Instantiate(character);
-        ch.transform.position = new Vector3(t.x + (float)wallThickness / 2, 1, t.z + (float)wallThickness / 2);
-        Debug.Log("Character visuals created at: " + ch.transform.position.x + "_" + ch.transform.position.z);
-    }*/
-
+    
     void Die() {
         Debug.Log("YOU DIED!!!!");
     }

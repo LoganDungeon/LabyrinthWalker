@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// will handle the GameObject with the visual side of the PlayerCharacter
 public class PlayerCharacterGOController : MonoBehaviour {
 
+    // the actual GameObject of the Player
     public GameObject player_GO;
 
     void Start() {
@@ -17,6 +19,7 @@ public class PlayerCharacterGOController : MonoBehaviour {
 
     }
 
+    // creates the PlayerCharacter at the position of the given tile
     public void CreateCharacterGameObject(Tile t) {
         Debug.Log("Created CharacterGameObject");
         player_GO = Instantiate(WorldController.Instance.character.gameObject);

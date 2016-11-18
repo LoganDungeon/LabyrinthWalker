@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+// static class which will contain all Generating functions
 public static class MapGenerator {
 
+    // reference to the world
     private static World world = WorldController.Instance.world;
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -26,42 +28,19 @@ public static class MapGenerator {
         }
         while (world.GetTileAt(randX, randZ).visited == true);
 
-        //Debug.Log("Starttile: " + randX + "_" + randZ);
-
         //===== FIRST STEP =====//
         // set the starting tile
         currentTile = world.GetTileAt(randX, randZ);
         // mark the startingTile as visited
         currentTile.visited = true;
         currentTile.wall = false;
-        //currentTile = world.GetTileAt(3, 3);
-
-        //world.GetTileAt(1, 3).visited = true;
-        //world.GetTileAt(3, 1).visited = true;
-        //world.GetTileAt(5, 3).visited = true;
-        //world.GetTileAt(3, 5).visited = true;
 
         //===== SECOND STEP =====//
         // while there are tiles with visited == false
         while ( AreThereUnvisitedTiles() ) {
             //=== First Substep ===//
             // first get all the neighbours of the tile, that has not been visited yet
-            List<Tile> neighbours = new List<Tile>();
-            // there are 2 possibilities:
-            // 1. we are not in a room:
-            /*
-            if (!currentTile.isInRoom) {
-                neighbours = GetCorridorNeighbours(currentTile);
-            }
-            
-            // 2. we are in a room:
-            else {
-                /*/
-//                 * HIER WEITER
-                /*/ 
-            }
-            */
-            neighbours = GetNeighbours(currentTile);
+            List<Tile> neighbours = GetNeighbours(currentTile);
             // Check if the current Tile has any unvisited neighbours
             if (neighbours.Count > 0) {
                 //=1=//
@@ -79,6 +58,7 @@ public static class MapGenerator {
                 currentTile = nextTile;
                 currentTile.visited = true;
             }
+            // there are no unvisited neighbours and we go back
             else if( visitedTiles.Count > 0 ) {
                 currentTile = visitedTiles.Pop();
             }
@@ -97,6 +77,7 @@ public static class MapGenerator {
         return false;
     }
 
+    // returns a List with all neighbours, that has not been visited yet
     static List<Tile> GetNeighbours( Tile tile) {
         List<Tile> neighbours = new List<Tile>();
         // add the north tile
@@ -118,10 +99,12 @@ public static class MapGenerator {
         return neighbours;
     }
 
+    // returns the tile inbetween of the given two tiles
     static Tile GetMiddleTile( Tile currentTile, Tile nextTile ) {
         return WorldController.Instance.world.GetTileAt( (currentTile.x + nextTile.x)/2, (currentTile.z + nextTile.z)/2 );
     }
 
+    // creates the Rooms and returns a List with information bout them
     public static List<Room> CreateRooms() {
 
         List<Room> rooms = new List<Room>();
@@ -133,8 +116,7 @@ public static class MapGenerator {
         int minRoomHeight = 3;
         int minRoomWidth= 3;
         int maxRoomHeight = (Mathf.FloorToInt(Mathf.Pow(Mathf.Pow(world.Height, 2f), 1 / 3f) - (Mathf.Sqrt((Mathf.Pow(Mathf.Pow(world.Height, 2f), 1 / 3f))))));
-        int maxRoomWidth  = (Mathf.FloorToInt(Mathf.Pow(Mathf.Pow(world.Width, 2f), 1 / 3f) - (Mathf.Sqrt((Mathf.Pow(Mathf.Pow(world.Width, 2f), 1 / 3f)))))); ;
-
+        int maxRoomWidth  = (Mathf.FloorToInt(Mathf.Pow(Mathf.Pow(world.Width, 2f), 1 / 3f) - (Mathf.Sqrt((Mathf.Pow(Mathf.Pow(world.Width, 2f), 1 / 3f))))));
         if (maxRoomHeight % 2 == 0)
             maxRoomHeight++;
         if (maxRoomWidth % 2 == 0)
@@ -149,10 +131,6 @@ public static class MapGenerator {
                 roomHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
             while (roomWidth % 2 == 0)
                 roomWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
-
-            Debug.Log("RoomHeight: " + roomHeight);
-            Debug.Log("RoomWidth: " + roomWidth);
-
             // create a random starttile for the room
             int tileX = 0;
             int tileZ = 0;
@@ -162,45 +140,18 @@ public static class MapGenerator {
                 tileX = Random.Range(1, world.Width - roomWidth);
             while (tileZ % 2 == 0)
                 tileZ = Random.Range(1, world.Height - roomHeight);
-
-            Debug.Log("TileX: " + tileX);
-            Debug.Log("TileZ: " + tileZ);
-
-            Debug.Log("TileX+Width: " + (tileX + roomWidth));
-            Debug.Log("TileZ+Height: " + (tileZ + roomHeight));
-            Debug.Log("");
             // now a random valid Tile is selected
-            // This Tile will be the "Left Under Tile" fpr the room
-
+            // This Tile will be the "Left Under Tile" for the room
             // then check if the temporary room collides with any other room
             if ( RoomCollidesWithOtherRoom(tileX, tileZ, tileX + roomWidth - 1, tileZ + roomHeight - 1, rooms) == false) {
                 rooms.Add(new Room(world.GetTileAt(tileX, tileZ), world.GetTileAt(tileX + roomWidth - 1, tileZ + roomHeight - 1)));
             }
         }
-
-
-
-        /* --just for testing--
-        int tileX1 = 0;
-        int tileZ1 = 0;
-        while (tileX1 % 2 == 0)
-            tileX1 = Random.Range(0, world.Height);
-        while (tileZ1 % 2 == 0)
-            tileZ1 = Random.Range(0, world.Width);
-
-
-        rooms.Add(new Room(
-                world.GetTileAt(tileX1, tileZ1),
-                world.GetTileAt(tileX1 + Random.Range(minRoomHeight, maxRoomHeight + 1), tileZ1 + Random.Range(minRoomWidth, maxRoomWidth + 1))
-            ));
-        */
-
-
         return rooms;
     }
 
+    // function checks if the given room collides with any other room already placed
     static bool RoomCollidesWithOtherRoom(int lowerX, int lowerZ, int upperX, int upperZ, List<Room> alreadyValidRooms) {
-
         // Collision appears when all of these matches:
         // 1. Left side of the roomThatCollides is left of the right side of a room
         // 2. Right side of the roomThatCollides is right of the left side of a room

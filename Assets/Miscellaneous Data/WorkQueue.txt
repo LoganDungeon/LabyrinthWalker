@@ -1,0 +1,3 @@
+- fix the Entrance Generation to not accure if the Room touches the outer wall of the map (so there will be no gaps in the wall)
+- implement Inventories
+- implement EnemyCharacters

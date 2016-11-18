@@ -13,15 +13,16 @@ public class PlayerCharacter : Character {
     // visuals of the Character
     public PlayerCharacterGOController pcgoC;
 
-    public PlayerCharacter(Tile tile, int _health, int _saturation, int _stamina, int inventorySpace): base(tile, _health) {
+    // creates the Character for the Player. tile - position to spawn at, health, stamina, 
+    // saturation - stats of the player, inventorySlots - Number of Spaces in the Inventory
+    public PlayerCharacter(Tile tile, int _health, int _saturation, int _stamina, int inventorySlots): base(tile, _health) {
 
         pcgoC = GameObject.FindObjectOfType<PlayerCharacterGOController>();
         pcgoC.CreateCharacterGameObject(tile);
-        //pcgoC.player_GO.transform.position = new Vector3( tile.x * WorldController.Instance.wallThickness, 1.5f, tile.z * WorldController.Instance.wallThickness);
 
         saturation = _saturation;
         stamina = _stamina;
 
-        playerInventory = new Inventory(inventorySpace);
+        playerInventory = new Inventory(inventorySlots);
     }
 }

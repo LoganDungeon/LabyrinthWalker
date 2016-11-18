@@ -10,15 +10,16 @@ public class Character {
     // Health of the Character
     public int health;
 
+    // Contructor will likely never be called on its own, only gets called by its inheriting classes
     public Character(Tile tile, int _health) {
-        position = new Vector3(0, 0, 0);
-
-        this.position.x = tile.x;
-        this.position.z = tile.z;
-
+        // set the position and the health
+        position = new Vector3(tile.x, 0, tile.z);
         health = _health;
     }
 
+    // simple function to move the Character.
+    // TODO: Maybe move to the EnemyCharacter Class, because the Player will never need this function.
+    //       PLayerMovement is handled with the FPSWakerEnhanced Class
     protected void Move(Vector3 posChange) {
         position += posChange;
     }

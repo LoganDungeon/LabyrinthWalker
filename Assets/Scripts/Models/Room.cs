@@ -15,23 +15,35 @@ using System.Collections.Generic;
 //  leftunderTile
 
 public class Room {
+    
+    // lowerTile is the left under Tile of the room
+    public Tile lowerTile {
+        get;
+        protected set;
+    }
 
-    public Tile lowerTile;
-    public Tile upperTile;
+    // upperTile is the right upper Tile of the room
+    public Tile upperTile {
+        get;
+        protected set;
+    }
 
-    World world {
+    // reference to the world
+    private World world {
         get {
             return WorldController.Instance.world;
         }
     }
 
-    public int XLength {
+    // length of the room in X direction (walls not included)
+    public int xLength {
         get {
             return upperTile.x - lowerTile.x + 1;
         }
     }
 
-    public int ZLength {
+    // length of the room in Z direction (walls not included)
+    public int zLength {
         get {
             return upperTile.z - lowerTile.z + 1;
         }
@@ -49,18 +61,17 @@ public class Room {
 
         edgeTiles = new List<Tile>();
         innerTiles = new List<Tile>();
-
         AddTilesToLists();
-
-        // change the tiles to be wall fre
+        // change the tiles to be wall free
         CreateRoom();
-
+        
+        // TODO
         // For now i want to add between 1 and 4 entrances, Later on i maybe want to create entrances, based on the size of the room
         AddEntrances(Random.Range(1,5));
     }
 
+    // adds the Tiles in the room to the specific List, if the tiles are either edge tiles or not
     void AddTilesToLists() {
-
         for (int x = lowerTile.x; x <= upperTile.x; x++) {
             for (int z = lowerTile.z; z <= upperTile.z; z++) {
                 if (x == lowerTile.x || x == upperTile.x || z == lowerTile.z || z == upperTile.z) {
@@ -72,8 +83,8 @@ public class Room {
         }
     }
 
+    // goes through every Tile in the room , mark it as visited and removes the wall on it
     void CreateRoom() {
-
         for (int x = lowerTile.x-1; x <= upperTile.x+1; x++) {
             for (int z = lowerTile.z-1; z <= upperTile.z+1; z++) {
                 Tile t = world.GetTileAt(x, z);
@@ -83,18 +94,17 @@ public class Room {
                 }
                 else{
                     t.wall = false;
-                    //t.visited = true;
-                    //t.isInRoom = true;
                 }
             }
         }
     }
 
+    // adds a certain number of entrances to the room by deleting a section of the wall that leads into the room
     void AddEntrances(int entrancesNumber) {
         List<Tile> possibleEntranceTiles = new List<Tile>();
-
+        // create a list with all the possible entrance tiles
         foreach (Tile tile in edgeTiles) {
-            if ((tile.x % 2 != 0) && (tile.z % 2 != 0)) {
+            if ((tile.x % 2 != 0) && (tile.z % 2 != 0) && tile.x != 1 && tile.x != world.Width-2 && tile.z != 1 && tile.z != world.Width-2) {
                 possibleEntranceTiles.Add(tile);
             }
         }
@@ -106,8 +116,6 @@ public class Room {
             }
             // chose a random tile for the entrance and create the entrance, aka mark it as "not in the room", so the maze Generator can go out of the room again.
             int temp = Random.Range(0, possibleEntranceTiles.Count);
-            //possibleEntranceTiles[temp].visited = false;
-            //possibleEntranceTiles[temp].visited = false;
             // 8 possibilities:
             //  - 4 corners
             //  - 4 edges

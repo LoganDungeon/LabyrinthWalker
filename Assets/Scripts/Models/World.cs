@@ -41,10 +41,12 @@ public class World {
         
     }
 
+    // returns the tile at the specified location
     public Tile GetTileAt(int x, int z) {
         return tiles[x, z];
     }
 
+    // retuns the tile at the specified location (floored to int)
     public Tile GetTileAt(float x, float z) {
         return tiles[ Mathf.FloorToInt(x), Mathf.FloorToInt(z)];
     }
