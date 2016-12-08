@@ -26,7 +26,7 @@ public static class MapGenerator {
                 randZ = Random.Range(1, world.Height - 1);
             }
         }
-        while (world.GetTileAt(randX, randZ).visited == true);
+        while (world.GetTileAt(randX, randZ).visited);
 
         //===== FIRST STEP =====//
         // set the starting tile
@@ -151,7 +151,7 @@ public static class MapGenerator {
     }
 
     // function checks if the given room collides with any other room already placed
-    static bool RoomCollidesWithOtherRoom(int lowerX, int lowerZ, int upperX, int upperZ, List<Room> alreadyValidRooms) {
+    private static bool RoomCollidesWithOtherRoom(int lowerX, int lowerZ, int upperX, int upperZ, List<Room> alreadyValidRooms) {
         // Collision appears when all of these matches:
         // 1. Left side of the roomThatCollides is left of the right side of a room
         // 2. Right side of the roomThatCollides is right of the left side of a room
