@@ -1,12 +1,19 @@
 fileFormatVersion: 2
 guid: 0980674a1299b564d835880eeab6da65
-timeCreated: 1472768201
+timeCreated: 1481533555
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: StatusBar_darkbars
     21300002: Hotbar
     21300004: StatusBar_lightbars
+    21300006: StatusBar_emptybars
+    21300008: healthPoint_dark
+    21300010: healthPoint_light
+    21300012: manaPoint_dark
+    21300014: manaPoint_light
+    21300016: staminaPoint_dark
+    21300018: staminaPoint_light
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -72,8 +79,8 @@ TextureImporter:
       name: Hotbar
       rect:
         serializedVersion: 2
-        x: 18
-        y: 112
+        x: 5
+        y: 70
         width: 326
         height: 40
       alignment: 0
@@ -89,6 +96,97 @@ TextureImporter:
         y: 0
         width: 276
         height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: StatusBar_emptybars
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 131
+        width: 276
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: healthPoint_dark
+      rect:
+        serializedVersion: 2
+        x: 277
+        y: 242
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: healthPoint_light
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 242
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: manaPoint_dark
+      rect:
+        serializedVersion: 2
+        x: 277
+        y: 222
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: manaPoint_light
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 222
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: staminaPoint_dark
+      rect:
+        serializedVersion: 2
+        x: 277
+        y: 202
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: staminaPoint_light
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 202
+        width: 8
+        height: 12
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
