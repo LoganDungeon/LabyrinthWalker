@@ -10,7 +10,7 @@ public class Inventory {
     public int inventorySlots;
 
     // creates an Inventory with a certain number of slots
-    public Inventory(int _inventorySlots) {
-        inventorySlots = _inventorySlots;
+    public Inventory(int inventorySlots) {
+        this.inventorySlots = inventorySlots;
     }
 }
