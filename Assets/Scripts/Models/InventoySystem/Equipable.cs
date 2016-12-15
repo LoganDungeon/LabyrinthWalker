@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Equipable : Item {
-    
-    protected int lifepoints { get; set; }
+public abstract class Equipable : Item {
+
+    protected int lifePoints { get; set; }
+
+    public Equipable( string id, string name, string description, int lifePoints ) : base(id, name, description) {
+        this.lifePoints = lifePoints;
+    }
 }
