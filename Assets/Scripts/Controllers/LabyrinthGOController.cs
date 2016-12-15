@@ -194,7 +194,7 @@ public class LabyrinthGOController : MonoBehaviour {
         mesh.triangles = triangles;
 
         mesh.RecalculateBounds();
-        mesh.Optimize();
+        ;
 
         return mesh;
     }
@@ -239,7 +239,7 @@ public class LabyrinthGOController : MonoBehaviour {
         mesh.triangles = triangles;
 
         mesh.RecalculateBounds();
-        mesh.Optimize();
+        ;
 
         return mesh;
     }
@@ -388,7 +388,7 @@ public class LabyrinthGOController : MonoBehaviour {
         mesh.triangles = triangles.ToArray();
 
         mesh.RecalculateBounds();
-        mesh.Optimize();
+        ;
 
         return mesh;
     }
