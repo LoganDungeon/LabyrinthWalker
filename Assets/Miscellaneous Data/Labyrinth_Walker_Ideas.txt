@@ -10,7 +10,8 @@ First:
 
 
 important Notes: 
-- two tiles "share" the touching wall
+- two tiles "share" the touching wall - obsolete
+- now tiles can be either wall or Floor -> later on i may add more types
 
 
 
@@ -63,3 +64,15 @@ Create meshes for the tiles:
 			ETile,
 			STile,
 			WTile)
+
+Inventory System:
+	- Items Ideas:
+		- Armor Pieces:
+			- Helmet
+			- Chestplate
+			- Shoulders
+			- Legprotection
+			- Boots
+		- Jewellery:
+			- Amulett
+			- Ring
