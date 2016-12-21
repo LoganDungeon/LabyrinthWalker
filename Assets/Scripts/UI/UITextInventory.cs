@@ -14,6 +14,6 @@ public class UITextInventory : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        text.text = "Inventory\nSpaces:\n" + WorldController.Instance.player.playerInventory.inventorySlots;
+        text.text = "Inventory\nSlots:\n" + WorldController.Instance.player.playerInventory.slots.Length;
 	}
 }

@@ -66,6 +66,12 @@ Create meshes for the tiles:
 			WTile)
 
 Inventory System:
+	- Inventories are Lists, which the Player can go trough with Arrow Up and Down
+	- They can move Items from one inventory to another. (eg. Chest to Player)
+	- Move the selected item(s) with one button or all of the (chest)items with another button at once
+	- Selected Item will try to move into the other inventory, 
+	  if there are no places left, it will stay and an error message or something like that will appear
+	- 
 	- Items Ideas:
 		- Armor Pieces:
 			- Helmet
