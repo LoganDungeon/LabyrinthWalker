@@ -4,7 +4,7 @@ using System.Collections;
 public class World {
 
     // there can be only one World
-    public static World current {
+    public static World Current {
         get;
         protected set;
     }
@@ -21,21 +21,21 @@ public class World {
     }
 
     // Array of all the tiles in the world
-    Tile[,] tiles;
+    private readonly Tile[,] _tiles;
 
     public World( int width, int height ) {
         
         // set the current World to be this world
-        current = this;
+        Current = this;
 
-        Width = width;
-        Height = height;
+        this.Width = width;
+        this.Height = height;
 
-        tiles = new Tile[width, height];
+        _tiles = new Tile[width, height];
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                tiles[i, j] = new Tile(i, j);
+                _tiles[i, j] = new Tile(i, j);
             }
         }
         
@@ -43,11 +43,11 @@ public class World {
 
     // returns the tile at the specified location
     public Tile GetTileAt(int x, int z) {
-        return tiles[x, z];
+        return _tiles[x, z];
     }
 
     // retuns the tile at the specified location (floored to int)
     public Tile GetTileAt(float x, float z) {
-        return tiles[ Mathf.FloorToInt(x), Mathf.FloorToInt(z)];
+        return _tiles[ Mathf.FloorToInt(x), Mathf.FloorToInt(z)];
     }
 }

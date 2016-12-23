@@ -4,16 +4,13 @@ using UnityEngine.UI;
 
 public class UITextSaturation : MonoBehaviour {
 
-    Text text;
+    private Text _text;
 
-    // Use this for initialization
-    void Start() {
-        text = GetComponent<Text>();
+    private void Start() {
+        _text = GetComponent<Text>();
     }
 
-    // Update is called once per frame
-    void Update() {
-
-        text.text = "Saturation:\n" + WorldController.Instance.player.saturation;
+    private void Update() {
+        _text.text = "Saturation:\n" + WorldController.Instance.Player.Saturation;
     }
 }

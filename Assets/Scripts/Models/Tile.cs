@@ -8,22 +8,38 @@ public class Tile {
     // planned Labyrinth
 
     // declares, if there will be generated a wall on this tile
-    public bool wall;
+    public bool IsWall {
+        get;
+        set;
+    }
 
     // declares if the tile was already visited by the depth first search algorithm
-    public bool visited;
+    public bool Visited {
+        get;
+        set;
+    }
 
-    public bool isRoomWall;
+    public bool IsRoomWall {
+        get;
+        set;
+    }
 
     // Coordinates;
-    public int x;
-    public int z;
+    public int X {
+        get;
+        set;
+    }
+
+    public int Z {
+        get;
+        set;
+    }
 
     public Tile( int x, int z ) {
-        this.x = x;
-        this.z = z;
-        this.wall = true;
-        this.visited = false;
-        this.isRoomWall = false;
+        this.X = x;
+        this.Z = z;
+        this.Visited = false;
+        this.IsWall = true;
+        this.IsRoomWall = false;
     }
 }

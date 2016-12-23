@@ -4,16 +4,13 @@ using UnityEngine.UI;
 
 public class UITextStamina : MonoBehaviour {
 
-    Text text;
+    private Text _text;
 
-    // Use this for initialization
-    void Start() {
-        text = GetComponent<Text>();
+    private void Start() {
+        _text = GetComponent<Text>();
     }
 
-    // Update is called once per frame
-    void Update() {
-
-        text.text = "Stamina:\n" + WorldController.Instance.player.stamina;
+    private void Update() {
+        _text.text = "Stamina:\n" + WorldController.Instance.Player.Stamina;
     }
 }

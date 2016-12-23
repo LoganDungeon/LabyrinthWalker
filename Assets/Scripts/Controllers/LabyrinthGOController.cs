@@ -5,85 +5,91 @@ public class LabyrinthGOController : MonoBehaviour {
 
     // WallTexture
     // FIXME: Maybe change, that i can choose between different Materials
-    public Material wallMaterial;
-    public Material floorMaterial;
+    public Material WallMaterial;
+    public Material FloorMaterial;
 
     // maybe just for develop purposes
-    public bool renderAll = false;
+    public bool RenderAll = false;
 
     // simple GameObjects which will contain all the Wall/Floor GOs 
-    GameObject wallParent;
-    GameObject floorParent;
+    private GameObject _wallParent;
+    private GameObject _floorParent;
 
-    float wallThickness;
+    private float _wallThickness;
 
     // World
-    World world {
+    private static World World {
         get {
-            return WorldController.Instance.world;
+            return WorldController.Instance.World;
         }
     }
 
     // Use this for initialization
-    void Start() {
-        wallThickness = WorldController.Instance.wallThickness;
+    private void Start() {
+        _wallThickness = WorldController.Instance.WallThickness;
         // instantiate the parentGameObjects
-        wallParent = new GameObject("WallParent");
-        floorParent = new GameObject("FloorParent");
-        wallParent.transform.SetParent(this.transform);
-        floorParent.transform.SetParent(this.transform);
+        _wallParent = new GameObject("WallParent");
+        _floorParent = new GameObject("FloorParent");
+        _wallParent.transform.SetParent(this.transform);
+        _floorParent.transform.SetParent(this.transform);
         // go through every Tile and create the GameObjects with the visual Mesh 
-        for (int x = 0; x < world.Width; x++) {
-            for (int z = 0; z < world.Height; z++) {
-                if (world.GetTileAt(x, z).wall == true) {
+        for (int x = 0; x < World.Width; x++) {
+            for (int z = 0; z < World.Height; z++) {
+                if (World.GetTileAt(x, z).IsWall) {
                     // we are on a wall Tile
-                    GameObject wall_go_lower = new GameObject();
-                    MeshCollider meshCol = wall_go_lower.AddComponent<MeshCollider>();
-                    MeshRenderer renderer = wall_go_lower.AddComponent<MeshRenderer>();
-                    MeshFilter mf = wall_go_lower.AddComponent<MeshFilter>();
+                    GameObject wallGoLower = new GameObject();
+                    MeshCollider meshCol = wallGoLower.AddComponent<MeshCollider>();
+                    MeshRenderer meshRenderer = wallGoLower.AddComponent<MeshRenderer>();
+                    MeshFilter mf = wallGoLower.AddComponent<MeshFilter>();
                     // create the Mesh based on the tiles neighbours
-                    Mesh mesh = CreateCubeMesh(wall_go_lower.transform.position, wallThickness, FrontNeighbourIsFloor(x, z), LeftNeighbourIsFloor(x, z), BackNeighbourIsFloor(x, z), RightNeighbourIsFloor(x, z));
+                    Mesh mesh = CreateCubeMesh(wallGoLower.transform.position, _wallThickness,
+                        FrontNeighbourIsFloor(x, z), LeftNeighbourIsFloor(x, z), BackNeighbourIsFloor(x, z),
+                        RightNeighbourIsFloor(x, z));
                     mf.mesh = mesh;
                     meshCol.sharedMesh = mesh;
-                    wall_go_lower.name = "Wall_" + x + "_" + z + "_lower";
-                    wall_go_lower.transform.position = new Vector3(wallThickness * x, 0, wallThickness * z);
-                    wall_go_lower.transform.SetParent(wallParent.transform);
-                    renderer.material = wallMaterial;
+                    wallGoLower.name = "Wall_" + x + "_" + z + "_lower";
+                    wallGoLower.transform.position = new Vector3(_wallThickness*x, 0, _wallThickness*z);
+                    wallGoLower.transform.SetParent(_wallParent.transform);
+                    meshRenderer.material = WallMaterial;
                     // Create another Cube on top of the first Cube to create a higher wall
-                    GameObject wall_go_upper = Instantiate(wall_go_lower);
-                    wall_go_upper.name = "Wall_" + x + "_" + z + "_upper";
-                    wall_go_upper.transform.SetParent(wallParent.transform);
-                    wall_go_upper.transform.position = new Vector3(wall_go_upper.transform.position.x, wall_go_upper.transform.position.y + wallThickness, wall_go_upper.transform.position.z);
+                    GameObject wallGoUpper = Instantiate(wallGoLower);
+                    wallGoUpper.name = "Wall_" + x + "_" + z + "_upper";
+                    wallGoUpper.transform.SetParent(_wallParent.transform);
+                    wallGoUpper.transform.position = new Vector3(wallGoUpper.transform.position.x,
+                        wallGoUpper.transform.position.y + _wallThickness, wallGoUpper.transform.position.z);
 
-                    wall_go_lower.SetActive(true);
-                    wall_go_upper.SetActive(true);
+                    wallGoLower.SetActive(true);
+                    wallGoUpper.SetActive(true);
 
                 }
-                else { // we are on a floor tile
+                else {
+                    // we are on a floor tile
                     // first create the GameObject and Mesh for the Floor
-                    GameObject floor = new GameObject();
-                    floor.name = "Floor_" + x + "_" + z;
+                    GameObject floor = new GameObject {
+                        name = "Floor_" + x + "_" + z
+                    };
                     MeshCollider meshCol = floor.AddComponent<MeshCollider>();
                     MeshFilter meshFilter = floor.AddComponent<MeshFilter>();
                     floor.AddComponent<MeshRenderer>();
-                    Mesh mesh = CreateFloorMesh(floor.transform.position, wallThickness);
+                    Mesh mesh = CreateFloorMesh(floor.transform.position, _wallThickness);
                     meshFilter.mesh = mesh;
                     meshCol.sharedMesh = mesh;
-                    floor.transform.SetParent(floorParent.transform);
-                    floor.transform.position = new Vector3(wallThickness * x, 0, wallThickness * z);
-                    floor.GetComponent<Renderer>().material = floorMaterial;
+                    floor.transform.SetParent(_floorParent.transform);
+                    floor.transform.position = new Vector3(_wallThickness * x, 0, _wallThickness * z);
+                    floor.GetComponent<Renderer>().material = FloorMaterial;
                     // then create the GameObject and Mesh for the ceiling
-                    GameObject ceiling = new GameObject();
-                    ceiling.name = "Ceiling_" + x + "_" + z;
+                    GameObject ceiling = new GameObject {
+                        name = "Ceiling_" + x + "_" + z
+                    };  
                     ceiling.AddComponent<MeshRenderer>();
                     meshCol = ceiling.AddComponent<MeshCollider>();
                     meshFilter = ceiling.AddComponent<MeshFilter>();
-                    mesh = CreateCeilingMesh(ceiling.transform.position, wallThickness);
+                    mesh = CreateCeilingMesh(ceiling.transform.position, _wallThickness);
                     meshFilter.mesh = mesh;
                     meshCol.sharedMesh = mesh;
-                    ceiling.transform.SetParent(floorParent.transform);
-                    ceiling.transform.position = new Vector3(wallThickness * x, 0, wallThickness * z);
-                    ceiling.GetComponent<Renderer>().material = floorMaterial;
+                    ceiling.transform.SetParent(_floorParent.transform);
+                    ceiling.transform.position = new Vector3(_wallThickness * x, 0, _wallThickness * z);
+                    ceiling.GetComponent<Renderer>().material = FloorMaterial;
                 }
             }
         }
@@ -92,70 +98,65 @@ public class LabyrinthGOController : MonoBehaviour {
     // Just for developement purposes
     // creates "bubbles" on top of the tiles
     // red colour means floor and blue means wall
-    void OnDrawGizmosSelected() {
-        if(world == null) {
-            return;
-        }
+    //private void OnDrawGizmosSelected() {
 
-        for (int x = 0; x < world.Width; x++) {
-            for (int z = 0; z < world.Height; z++) {
-                if (world.GetTileAt(x, z).wall == true) {
-                    // Create a gizmo sphere, to better analyse the tiles
-                    // Wall will be blue
-                    Gizmos.color = Color.blue;
-                    Gizmos.DrawSphere( new Vector3((float)(wallThickness*x + 0.5*wallThickness), 2 * wallThickness, (float)(wallThickness * z + 0.5 * wallThickness) ), 0.5f);
-                }
-                else {
-                    // Create a gizmo sphere, to better analyse the tiles
-                    // Floor will be red
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(new Vector3((float)(wallThickness * x + 0.5 * wallThickness), 2 * wallThickness, (float)(wallThickness * z + 0.5 * wallThickness)), 0.5f);
-                }
-            }
-        }
-    }
+    //    if(World == null) {
+    //        return;
+    //    }
+
+    //    for (int x = 0; x < World.Width; x++) {
+    //        for (int z = 0; z < World.Height; z++) {
+    //            if (World.GetTileAt(x, z).IsWall) {
+    //                // Create a gizmo sphere, to better analyse the tiles
+    //                // Wall will be blue
+    //                Gizmos.color = Color.blue;
+    //                Gizmos.DrawSphere( new Vector3((float)(_wallThickness*x + 0.5*_wallThickness), 2 * _wallThickness, (float)(_wallThickness * z + 0.5 * _wallThickness) ), 0.5f);
+    //            }
+    //            else {
+    //                // Create a gizmo sphere, to better analyse the tiles
+    //                // Floor will be red
+    //                Gizmos.color = Color.red;
+    //                Gizmos.DrawSphere(new Vector3((float)(_wallThickness * x + 0.5 * _wallThickness), 2 * _wallThickness, (float)(_wallThickness * z + 0.5 * _wallThickness)), 0.5f);
+    //            }
+    //        }
+    //    }
+    //}
     
-    void FixedUpdate() {
+    private void FixedUpdate() {
+
         // Position of the Player
-        Transform playerTransform = WorldController.Instance.player.pcgoC.player_GO.transform;
+        Transform playerTransform = WorldController.Instance.Player.PcgoC.PlayerGo.transform;
         
         // only render the tiles, that  are in range of the Character
         // by deactivating the tiles, that are out of range.
         // TODO: i need a better way to do this. i only have to deactivate the visuals of the Objects
         // currently calculated with manhattan distance
-        if (!renderAll) {
-            foreach (Transform wall in wallParent.transform) {
-                if ((Mathf.Abs(wall.transform.position.x - playerTransform.position.x) + Mathf.Abs(wall.transform.position.z - playerTransform.position.z)) < WorldController.Instance.renderDistance) {
-                    wall.gameObject.SetActive(true);
-                }
-                else {
-                    wall.gameObject.SetActive(false);
-                }
-            }
+        if (RenderAll) return;
+        foreach (Transform wall in _wallParent.transform) {
+            wall.gameObject.SetActive(Mathf.Abs(wall.transform.position.x - playerTransform.position.x) +
+                                      Mathf.Abs(wall.transform.position.z - playerTransform.position.z) <
+                                      WorldController.Instance.RenderDistance);
+        }
 
-            foreach (Transform floor in floorParent.transform) {
-                if ((Mathf.Abs(floor.transform.position.x - playerTransform.position.x) + Mathf.Abs(floor.transform.position.z - playerTransform.position.z)) < WorldController.Instance.renderDistance) {
-                    floor.gameObject.SetActive(true);
-                }
-                else {
-                    floor.gameObject.SetActive(false);
-                }
-            }
+        foreach (Transform floor in _floorParent.transform) {
+            floor.gameObject.SetActive(Mathf.Abs(floor.transform.position.x - playerTransform.position.x) +
+                                       Mathf.Abs(floor.transform.position.z - playerTransform.position.z) <
+                                       WorldController.Instance.RenderDistance);
         }
     }
 
     // creates a square floor mesh
-    Mesh CreateFloorMesh( Vector3 pos, float length ) {
+    private Mesh CreateFloorMesh( Vector3 pos, float length ) {
         return CreateFloorMesh(pos, length, length);
     }
 
     // creates a square ceiling mesh
-    Mesh CreateCeilingMesh( Vector3 pos, float length ) {
+    private Mesh CreateCeilingMesh( Vector3 pos, float length ) {
         return CreateCeilingMesh(pos, length, length, length);
     }
 
     // creates a Floor Mesh with the given size
-    Mesh CreateFloorMesh( Vector3 pos, float length, float width ) {
+    private Mesh CreateFloorMesh( Vector3 pos, float length, float width ) {
         Vector3 p0 = new Vector3(pos.x - 0.5f * length, pos.y, pos.z - 0.5f * width);
         Vector3 p1 = new Vector3(pos.x - 0.5f * length, pos.y, pos.z + 0.5f * width);
         Vector3 p2 = new Vector3(pos.x + 0.5f * length, pos.y, pos.z + 0.5f * width);
@@ -172,13 +173,13 @@ public class LabyrinthGOController : MonoBehaviour {
             Vector3.up
         };
 
-        Vector2 _00 = new Vector2(0f, 0f);
-        Vector2 _10 = new Vector2(1f, 0f);
-        Vector2 _01 = new Vector2(0f, 1f);
-        Vector2 _11 = new Vector2(1f, 1f);
+        Vector2 uv00 = new Vector2(0f, 0f);
+        Vector2 uv10 = new Vector2(1f, 0f);
+        Vector2 uv01 = new Vector2(0f, 1f);
+        Vector2 uv11 = new Vector2(1f, 1f);
 
         Vector2[] uvs = new Vector2[] {
-            _11, _01, _00, _10
+            uv11, uv01, uv00, uv10
         };
 
         int[] triangles = new int[] {
@@ -186,21 +187,18 @@ public class LabyrinthGOController : MonoBehaviour {
             0,2,3
         };
 
-        Mesh mesh = new Mesh();
-
-        mesh.vertices = vertices;
-        mesh.normals = normales;
-        mesh.uv = uvs;
-        mesh.triangles = triangles;
-
+        Mesh mesh = new Mesh {
+            vertices = vertices,
+            normals = normales,
+            uv = uvs,
+            triangles = triangles
+        };
         mesh.RecalculateBounds();
-        ;
-
         return mesh;
     }
 
     // creates a Ceiling Mesh with the given size
-    Mesh CreateCeilingMesh( Vector3 pos, float length, float width, float height ) {
+    private Mesh CreateCeilingMesh( Vector3 pos, float length, float width, float height ) {
         Vector3 p0 = new Vector3(pos.x - 0.5f * length, pos.y + 2 * height, pos.z - 0.5f * width);
         Vector3 p1 = new Vector3(pos.x - 0.5f * length, pos.y + 2 * height, pos.z + 0.5f * width);
         Vector3 p2 = new Vector3(pos.x + 0.5f * length, pos.y + 2 * height, pos.z + 0.5f * width);
@@ -217,13 +215,13 @@ public class LabyrinthGOController : MonoBehaviour {
             Vector3.down
         };
 
-        Vector2 _00 = new Vector2(0f, 0f);
-        Vector2 _10 = new Vector2(1f, 0f);
-        Vector2 _01 = new Vector2(0f, 1f);
-        Vector2 _11 = new Vector2(1f, 1f);
+        Vector2 uv00 = new Vector2(0f, 0f);
+        Vector2 uv10 = new Vector2(1f, 0f);
+        Vector2 uv01 = new Vector2(0f, 1f);
+        Vector2 uv11 = new Vector2(1f, 1f);
 
         Vector2[] uvs = new Vector2[] {
-            _11, _01, _00, _10
+            uv11, uv01, uv00, uv10
         };
 
         int[] triangles = new int[] {
@@ -231,26 +229,23 @@ public class LabyrinthGOController : MonoBehaviour {
             3,2,0
         };
 
-        Mesh mesh = new Mesh();
-
-        mesh.vertices = vertices;
-        mesh.normals = normales;
-        mesh.uv = uvs;
-        mesh.triangles = triangles;
-
+        Mesh mesh = new Mesh {
+            vertices = vertices,
+            normals = normales,
+            uv = uvs,
+            triangles = triangles
+        };
         mesh.RecalculateBounds();
-        ;
-
         return mesh;
     }
     
     // creates a creates a Cube Mesh with the given length
-    Mesh CreateCubeMesh( Vector3 pos, float length, bool frontSide, bool leftSide, bool backSide, bool rightSide ) {
+    private Mesh CreateCubeMesh( Vector3 pos, float length, bool frontSide, bool leftSide, bool backSide, bool rightSide ) {
         return CreateCuboidMesh( pos, length, length, length, frontSide, leftSide, backSide, rightSide);
     }
 
     // creates a cuboid Mesh with the given size
-    Mesh CreateCuboidMesh( Vector3 pos, float length, float width, float height, bool frontSide, bool leftSide, bool backSide, bool rightSide) {
+    private Mesh CreateCuboidMesh( Vector3 pos, float length, float width, float height, bool frontSide, bool leftSide, bool backSide, bool rightSide) {
         #region Vertices
         Vector3 p0 = new Vector3(pos.x - 0.5f * length, pos.y,          pos.z - 0.5f * width);
         Vector3 p1 = new Vector3(pos.x - 0.5f * length, pos.y,          pos.z + 0.5f * width);
@@ -313,29 +308,29 @@ public class LabyrinthGOController : MonoBehaviour {
         #endregion
 
         #region UVs
-        Vector2 _00 = new Vector2(0f, 0f);
-        Vector2 _10 = new Vector2(1f, 0f);
-        Vector2 _01 = new Vector2(0f, 1f);
-        Vector2 _11 = new Vector2(1f, 1f);
+        Vector2 uv00 = new Vector2(0f, 0f);
+        Vector2 uv10 = new Vector2(1f, 0f);
+        Vector2 uv01 = new Vector2(0f, 1f);
+        Vector2 uv11 = new Vector2(1f, 1f);
 
         Vector2[] uvs = new Vector2[] {
 	        // Bottom
-	        _11, _01, _00, _10,
+	        uv11, uv01, uv00, uv10,
  
 	        // Left
-	        _11, _01, _00, _10,
+	        uv11, uv01, uv00, uv10,
  
 	        // Front
-	        _11, _01, _00, _10,
+	        uv11, uv01, uv00, uv10,
  
 	        // Back
-	        _11, _01, _00, _10,
+	        uv11, uv01, uv00, uv10,
  
 	        // Right
-	        _11, _01, _00, _10,
+	        uv11, uv01, uv00, uv10,
  
 	        // Top
-	        _11, _01, _00, _10,
+	        uv11, uv01, uv00, uv10,
         };
         #endregion
 
@@ -380,42 +375,30 @@ public class LabyrinthGOController : MonoBehaviour {
         }
         #endregion
 
-        Mesh mesh = new Mesh();
-
-        mesh.vertices = vertices;
-        mesh.normals = normales;
-        mesh.uv = uvs;
-        mesh.triangles = triangles.ToArray();
-
+        Mesh mesh = new Mesh {
+            vertices = vertices,
+            normals = normales,
+            uv = uvs,
+            triangles = triangles.ToArray()
+        };
         mesh.RecalculateBounds();
-        ;
-
         return mesh;
     }
 
     // 4 functions used to determine, if the requested neighbour of a tile is Floor or not (wall)
-    bool FrontNeighbourIsFloor( int x, int z ) {
-        if (x > 0 && world.GetTileAt(x - 1, z).wall == false)
-            return true;
-        return false;
+    private bool FrontNeighbourIsFloor( int x, int z ) {
+        return !(x > 0 && World.GetTileAt(x - 1, z).IsWall);
     }
 
-    bool RightNeighbourIsFloor( int x, int z ) {
-        if (z < world.Width - 1 && world.GetTileAt(x, z + 1).wall == false)
-            return true;
-        return false;
+    private bool RightNeighbourIsFloor( int x, int z ) {
+        return !(z < World.Width - 1 && World.GetTileAt(x, z + 1).IsWall);
     }
 
-    bool BackNeighbourIsFloor( int x, int z ) {
-        if (x < world.Height - 1 && world.GetTileAt(x + 1, z).wall == false)
-            return true;
-        return false;
+    private bool BackNeighbourIsFloor( int x, int z ) {
+        return !(x < World.Height - 1 && World.GetTileAt(x + 1, z).IsWall);
     }
 
-    bool LeftNeighbourIsFloor( int x, int z ) {
-        if (z > 0 && world.GetTileAt(x, z - 1).wall == false)
-            return true;
-        return false;
+    private bool LeftNeighbourIsFloor( int x, int z ) {
+        return !(z > 0 && World.GetTileAt(x, z - 1).IsWall);
     }
-
 }

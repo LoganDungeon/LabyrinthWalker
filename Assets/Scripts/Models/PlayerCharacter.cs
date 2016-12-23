@@ -4,25 +4,35 @@ using System.Collections;
 public class PlayerCharacter : Character {
 
     // Inventory of the Player
-    public Inventory playerInventory;
+    private Inventory _playerInventory;
 
     // saturation will go down with the time and stamina will be used to sprint
-    public int saturation;
-    public int stamina;
+    public int Saturation {
+        get;
+        protected set;
+    }
+
+    public int Stamina {
+        get;
+        protected set;
+    }
 
     // visuals of the Character
-    public PlayerCharacterGOController pcgoC;
+    public PlayerCharacterGOController PcgoC;
 
     // creates the Character for the Player. tile - position to spawn at, health, stamina, 
     // saturation - stats of the player, inventorySlots - Number of Spaces in the Inventory
-    public PlayerCharacter(Tile tile, int _health, int _saturation, int _stamina, int inventorySlots): base(tile, _health) {
+    public PlayerCharacter(Tile tile, int health, int saturation, int stamina, int inventorySlots): base(tile, health) {
+        PcgoC = Object.FindObjectOfType<PlayerCharacterGOController>();
+        PcgoC.CreateCharacterGameObject(tile);
 
-        pcgoC = GameObject.FindObjectOfType<PlayerCharacterGOController>();
-        pcgoC.CreateCharacterGameObject(tile);
+        this.Saturation = saturation;
+        this.Stamina = stamina;
 
-        saturation = _saturation;
-        stamina = _stamina;
+        _playerInventory = new Inventory(inventorySlots);
+    }
 
-        playerInventory = new Inventory(inventorySlots);
+    public int GetInventorySpaces() {
+        return _playerInventory.Slots.Length;
     }
 }

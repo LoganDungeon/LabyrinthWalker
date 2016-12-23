@@ -3,15 +3,18 @@ using System.Collections;
 
 public class Consumable : Item {
 
-    public int quantity {
+    public int Quantity {
         get;
-        protected set;
+        set;
     }
 
-    public int maxQuantity { get; protected set; }
+    public int MaxQuantity {
+        get;
+        private set;
+    }
 
     public Consumable( string id, string name, string description, int initialQuantity, int maxQuantity ) : base(id, name, description) {
-        this.quantity = initialQuantity;
-        this.maxQuantity = maxQuantity;
+        this.Quantity = initialQuantity;
+        this.MaxQuantity = maxQuantity;
     }
 }

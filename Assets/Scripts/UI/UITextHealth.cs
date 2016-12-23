@@ -4,16 +4,13 @@ using UnityEngine.UI;
 
 public class UITextHealth : MonoBehaviour {
 
-    Text text;
+    private Text _text;
 
-    // Use this for initialization
-    void Start() {
-        text = GetComponent<Text>();
+    private void Start() {
+        _text = GetComponent<Text>();
     }
 
-    // Update is called once per frame
-    void Update() {
-
-        text.text = "Health:\n" + WorldController.Instance.player.health;
+    private void Update() {
+        _text.text = "Health:\n" + WorldController.Instance.Player.Health;
     }
 }

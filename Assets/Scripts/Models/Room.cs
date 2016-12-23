@@ -17,50 +17,50 @@ using System.Collections.Generic;
 public class Room {
     
     // lowerTile is the left under Tile of the room
-    public Tile lowerTile {
+    public Tile LowerTile {
         get;
         protected set;
     }
 
     // upperTile is the right upper Tile of the room
-    public Tile upperTile {
+    public Tile UpperTile {
         get;
         protected set;
     }
 
     // reference to the world
-    private World world {
+    private static World World {
         get {
-            return WorldController.Instance.world;
+            return WorldController.Instance.World;
         }
     }
 
     // length of the room in X direction (walls not included)
-    public int xLength {
+    public int XLength {
         get {
-            return upperTile.x - lowerTile.x + 1;
+            return this.UpperTile.X - this.LowerTile.X + 1;
         }
     }
 
     // length of the room in Z direction (walls not included)
-    public int zLength {
+    public int ZLength {
         get {
-            return upperTile.z - lowerTile.z + 1;
+            return this.UpperTile.Z - this.LowerTile.Z + 1;
         }
     }
 
     // Tiles, that are IN the room, but at the edge of the room
-    public List<Tile> edgeTiles;
+    private List<Tile> _edgeTiles;
     // Tiles, that are IN the room, and not at the edge of the room
-    public List<Tile> innerTiles;
+    private List<Tile> _innerTiles;
 
     public Room(Tile leftUnderTile, Tile rightUpperTile) {
 
-        lowerTile = leftUnderTile;
-        upperTile = rightUpperTile;
+        this.LowerTile = leftUnderTile;
+        this.UpperTile = rightUpperTile;
 
-        edgeTiles = new List<Tile>();
-        innerTiles = new List<Tile>();
+        _edgeTiles = new List<Tile>();
+        _innerTiles = new List<Tile>();
         AddTilesToLists();
         // change the tiles to be wall free
         CreateRoom();
@@ -71,40 +71,40 @@ public class Room {
     }
 
     // adds the Tiles in the room to the specific List, if the tiles are either edge tiles or not
-    void AddTilesToLists() {
-        for (int x = lowerTile.x; x <= upperTile.x; x++) {
-            for (int z = lowerTile.z; z <= upperTile.z; z++) {
-                if (x == lowerTile.x || x == upperTile.x || z == lowerTile.z || z == upperTile.z) {
-                    edgeTiles.Add(world.GetTileAt(x, z));
+    private void AddTilesToLists() {
+        for (int x = this.LowerTile.X; x <= this.UpperTile.X; x++) {
+            for (int z = this.LowerTile.Z; z <= this.UpperTile.Z; z++) {
+                if (x == this.LowerTile.X || x == this.UpperTile.X || z == this.LowerTile.Z || z == this.UpperTile.Z) {
+                    _edgeTiles.Add(World.GetTileAt(x, z));
                 }else {
-                    innerTiles.Add(world.GetTileAt(x, z));
+                    _innerTiles.Add(World.GetTileAt(x, z));
                 }
             }
         }
     }
 
     // goes through every Tile in the room , mark it as visited and removes the wall on it
-    void CreateRoom() {
-        for (int x = lowerTile.x-1; x <= upperTile.x+1; x++) {
-            for (int z = lowerTile.z-1; z <= upperTile.z+1; z++) {
-                Tile t = world.GetTileAt(x, z);
-                if ( x==lowerTile.x-1 || x==upperTile.x+1 || z==lowerTile.z-1 || z==upperTile.z+1 ) {
+    private void CreateRoom() {
+        for (int x = this.LowerTile.X-1; x <= this.UpperTile.X+1; x++) {
+            for (int z = this.LowerTile.Z-1; z <= this.UpperTile.Z+1; z++) {
+                Tile t = World.GetTileAt(x, z);
+                if ( x==this.LowerTile.X-1 || x==this.UpperTile.X+1 || z==this.LowerTile.Z-1 || z==this.UpperTile.Z+1 ) {
                     // This are the walls of the room
-                    t.isRoomWall = true;
+                    t.IsRoomWall = true;
                 }
                 else{
-                    t.wall = false;
+                    t.IsWall = false;
                 }
             }
         }
     }
 
     // adds a certain number of entrances to the room by deleting a section of the wall that leads into the room
-    void AddEntrances(int entrancesNumber) {
+    private void AddEntrances(int entrancesNumber) {
         List<Tile> possibleEntranceTiles = new List<Tile>();
         // create a list with all the possible entrance tiles
-        foreach (Tile tile in edgeTiles) {
-            if ((tile.x % 2 != 0) && (tile.z % 2 != 0) && tile.x != 1 && tile.x != world.Width-2 && tile.z != 1 && tile.z != world.Width-2) {
+        foreach (Tile tile in _edgeTiles) {
+            if ((tile.X % 2 != 0) && (tile.Z % 2 != 0) && tile.X != 1 && tile.X != World.Width-2 && tile.Z != 1 && tile.Z != World.Width-2) {
                 possibleEntranceTiles.Add(tile);
             }
         }
@@ -121,86 +121,94 @@ public class Room {
             //  - 4 edges
             
             // 1 corner, left  lower
-            if (possibleEntranceTiles[temp].x==lowerTile.x && possibleEntranceTiles[temp].z == lowerTile.z) {
+            if (possibleEntranceTiles[temp].X==this.LowerTile.X && possibleEntranceTiles[temp].Z == this.LowerTile.Z) {
                 // we are on a corner, so there are 2 possible entrances
                 int rand = Random.Range(0, 2);
-                if (rand == 0) {
-                    world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).isRoomWall = false;
-                    world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).wall = false;
-                }
-                else if (rand == 1) {
-                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).isRoomWall = false;
-                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).wall = false;
+                switch (rand) {
+                    case 0:
+                        World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsRoomWall = false;
+                        World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsWall = false;
+                        break;
+                    case 1:
+                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsRoomWall = false;
+                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsWall = false;
+                        break;
                 }
                 continue;
             }
             // 2 corner, left  upper
-            if (possibleEntranceTiles[temp].x == lowerTile.x && possibleEntranceTiles[temp].z == upperTile.z) {
+            if (possibleEntranceTiles[temp].X == this.LowerTile.X && possibleEntranceTiles[temp].Z == this.UpperTile.Z) {
                 // we are on a corner, so there are 2 possible entrances
                 int rand = Random.Range(0, 2);
-                if (rand == 0) {
-                    world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).isRoomWall = false;
-                    world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).wall = false;
-                }
-                else if (rand == 1) {
-                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).isRoomWall = false;
-                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).wall = false;
+                switch (rand) {
+                    case 0:
+                        World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsRoomWall = false;
+                        World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsWall = false;
+                        break;
+                    case 1:
+                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsRoomWall = false;
+                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsWall = false;
+                        break;
                 }
                 continue;
             }
             // 3 corner, right lower
-            if (possibleEntranceTiles[temp].x == upperTile.x && possibleEntranceTiles[temp].z == lowerTile.z) {
+            if (possibleEntranceTiles[temp].X == this.UpperTile.X && possibleEntranceTiles[temp].Z == this.LowerTile.Z) {
                 // we are on a corner, so there are 2 possible entrances
                 int rand = Random.Range(0, 2);
-                if (rand == 0) {
-                    world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).isRoomWall = false;
-                    world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).wall = false;
-                }
-                else if (rand == 1) {
-                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).isRoomWall = false;
-                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).wall = false;
+                switch (rand) {
+                    case 0:
+                        World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsRoomWall = false;
+                        World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsWall = false;
+                        break;
+                    case 1:
+                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsRoomWall = false;
+                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsWall = false;
+                        break;
                 }
                 continue;
             }
             // 4 corner, right upper
-            if (possibleEntranceTiles[temp].x == upperTile.x && possibleEntranceTiles[temp].z == upperTile.z) {
+            if (possibleEntranceTiles[temp].X == this.UpperTile.X && possibleEntranceTiles[temp].Z == this.UpperTile.Z) {
                 // we are on a corner, so there are 2 possible entrances
                 int rand = Random.Range(0, 2);
-                if (rand == 0) {
-                    world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).isRoomWall = false;
-                    world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).wall = false;
-                }
-                else if (rand == 1) {
-                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).isRoomWall = false;
-                    world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).wall = false;
+                switch (rand) {
+                    case 0:
+                        World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsRoomWall = false;
+                        World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsWall = false;
+                        break;
+                    case 1:
+                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsRoomWall = false;
+                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsWall = false;
+                        break;
                 }
                 continue;
             }
             // 5 edge, left
-            if (possibleEntranceTiles[temp].x == lowerTile.x) {
+            if (possibleEntranceTiles[temp].X == this.LowerTile.X) {
                 // we are on an edge, so there is 1 possible entrances
-                world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).isRoomWall = false;
-                world.GetTileAt(possibleEntranceTiles[temp].x - 1, possibleEntranceTiles[temp].z).wall = false;
+                World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsRoomWall = false;
+                World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsWall = false;
                 continue;
             }
             // 6 edge, upper
-            if (possibleEntranceTiles[temp].z == upperTile.z) {
-                world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).isRoomWall = false;
-                world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z + 1).wall = false;
+            if (possibleEntranceTiles[temp].Z == this.UpperTile.Z) {
+                World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsRoomWall = false;
+                World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsWall = false;
                 continue;
             }
             // 7 edge, right
-            if (possibleEntranceTiles[temp].x == upperTile.x) {
+            if (possibleEntranceTiles[temp].X == this.UpperTile.X) {
                 // we are on a corner, so there is 1 possible entrances
-                world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).isRoomWall = false;
-                world.GetTileAt(possibleEntranceTiles[temp].x + 1, possibleEntranceTiles[temp].z).wall = false;
+                World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsRoomWall = false;
+                World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsWall = false;
                 continue;
             }
             // 8 edge, lower
-            if (possibleEntranceTiles[temp].z == lowerTile.z) {
+            if (possibleEntranceTiles[temp].Z == this.LowerTile.Z) {
                 // we are on a corner, so there are 2 possible entrances
-                world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).isRoomWall = false;
-                world.GetTileAt(possibleEntranceTiles[temp].x, possibleEntranceTiles[temp].z - 1).wall = false;
+                World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsRoomWall = false;
+                World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsWall = false;
                 continue;
             }
             possibleEntranceTiles.RemoveAt(temp);

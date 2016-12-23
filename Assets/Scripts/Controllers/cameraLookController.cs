@@ -3,41 +3,40 @@ using System.Collections;
 
 public class cameraLookController : MonoBehaviour {
 
-    public float sensitivity = 5.0f;
-    public float smoothing = 2.0f;
+    public float Sensitivity = 5.0f;
+    public float Smoothing = 2.0f;
 
-    bool mouseLocked;
-    Vector2 mouseLook;
-    Vector2 smoothV;
-    GameObject character;
+    private bool _mouseLocked;
+    private Vector2 _mouseLook;
+    private Vector2 _smoothV;
+    private GameObject _character;
 
-    void Start () {
-        character = this.transform.parent.gameObject;
+    private void Start () {
+        _character = this.transform.parent.gameObject;
         Cursor.lockState = CursorLockMode.Locked;
-        mouseLocked = true;
+        _mouseLocked = true;
     }
 	
-	// Update is called once per frame
-	void Update () {
+	private void Update () {
         Vector2 md = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
-        md = Vector2.Scale(md, new Vector2(sensitivity * smoothing, sensitivity * smoothing));
-        smoothV.x = Mathf.Lerp(smoothV.x, md.x, 1 / smoothing);
-        smoothV.y = Mathf.Lerp(smoothV.y, md.y, 1 / smoothing);
-        mouseLook += smoothV;
-        mouseLook.y = Mathf.Clamp(mouseLook.y, -90f, 90f);
+        md = Vector2.Scale(md, new Vector2(Sensitivity * Smoothing, Sensitivity * Smoothing));
+        _smoothV.x = Mathf.Lerp(_smoothV.x, md.x, 1 / Smoothing);
+        _smoothV.y = Mathf.Lerp(_smoothV.y, md.y, 1 / Smoothing);
+        _mouseLook += _smoothV;
+        _mouseLook.y = Mathf.Clamp(_mouseLook.y, -90f, 90f);
 
-        transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
-        character.transform.localRotation = Quaternion.AngleAxis(mouseLook.x, character.transform.up);
+        this.transform.localRotation = Quaternion.AngleAxis(-_mouseLook.y, Vector3.right);
+        _character.transform.localRotation = Quaternion.AngleAxis(_mouseLook.x, _character.transform.up);
 
-        if (Input.GetKeyDown("escape") && mouseLocked == true) {
+        if (Input.GetKeyDown("escape") && _mouseLocked) {
             Cursor.lockState = CursorLockMode.None;
-            mouseLocked = false;
+            _mouseLocked = false;
             Debug.Log("unlocked");
         }
-        else if(Input.GetKeyDown("escape") && mouseLocked == false) {
+        else if(Input.GetKeyDown("escape") && _mouseLocked == false) {
             Cursor.lockState = CursorLockMode.Locked;
-            mouseLocked = true;
+            _mouseLocked = true;
             Debug.Log("locked");
         }
     }

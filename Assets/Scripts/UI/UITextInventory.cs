@@ -4,16 +4,13 @@ using UnityEngine.UI;
 
 public class UITextInventory : MonoBehaviour {
 
-    Text text;
+    private Text _text;
 
-	// Use this for initialization
-	void Start () {
-        text = GetComponent<Text>();
+	private void Start() {
+        _text = GetComponent<Text>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-
-        text.text = "Inventory\nSlots:\n" + WorldController.Instance.player.playerInventory.slots.Length;
+	private void Update() {
+        _text.text = "Inventory\nSlots:\n" + WorldController.Instance.Player.GetInventorySpaces();
 	}
 }

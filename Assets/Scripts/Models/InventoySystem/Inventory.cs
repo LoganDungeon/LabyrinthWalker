@@ -9,32 +9,32 @@ public class Inventory {
 
     // TODO: empty slots can be either null or a specific "empty Item".
     // guess null will be the way to go.
-    private Item[] slots;
+    public Item[] Slots {
+        get;
+        private set;
+    }
 
     // creates an empty Inventory with a certain number of slots
     public Inventory(int inventorySlots) {
-        this.slots = new Item[inventorySlots];
+        this.Slots = new Item[inventorySlots];
     }
 
-    public void addItem(Item item) {
+    public void AddItem(Item item) {
         // for now i have 2 different "kinds" of items: 
         // equipables are not stackable and have lifepoints etc.
         // consumables are stackable (maybe i have to change the name later)
         if (item is Consumable) {
-            for (int i = 0; i < slots.Length; i++) {
-                if (slots[i] == null)
-                    continue;
-                if (slots[i].id == item.id) {
-                    // found the inventoryslot which contains the item
-                    if (((Consumable)slots[i]).quantity + ((Consumable)item).quantity <= ((Consumable)item).maxQuantity) {
-                        ((Consumable) slots[i]).quantity += ((Consumable) item).quantity;
-                    }
+            for (int i = 0; i < this.Slots.Length; i++) {
+                if (this.Slots[i] == null || this.Slots[i].Id != item.Id) continue;
+                // found the inventoryslot which contains the item
+                if(((Consumable)this.Slots[i]).Quantity + ((Consumable)item).Quantity <= ((Consumable)item).MaxQuantity) {
+                    ((Consumable)this.Slots[i]).Quantity += ((Consumable) item).Quantity;
                 }
             }
         }
 
 
-        foreach (Item itemInList in slots) {
+        foreach (Item itemInList in this.Slots) {
         }
         //if (slots[inventorySlot] == null) {
         //    slots[inventorySlot] = item;
