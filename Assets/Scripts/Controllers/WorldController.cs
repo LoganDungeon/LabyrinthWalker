@@ -1,5 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Serialization;
 
 public class WorldController : MonoBehaviour {
 
@@ -38,25 +41,27 @@ public class WorldController : MonoBehaviour {
         set;
     }
 
-    public List<Room> Rooms {
-        get;
-        private set;
-    }
-
     private void OnEnable() {
-        // cheack if there is (for whatever reason) already an Instance of the WorldController
+        // check if there is (for whatever reason) already an Instance of the WorldController
         if(Instance != null) {
             Debug.LogError("There can only be one Instance of the WorldController!");
         }
         // if not, set the Instance to this WorldController
         Instance = this;
 
-        // then create the world
-        CreateWorld();
+        // check if new World or load from save
+        if (OptionsController.NewWorld) {
+            // create the new world
+            CreateNewWorld();
+        }
+        else {
+            LoadWorld();
+        }
+        OptionsController.PrintModus();
     }
-
-    // creates the world with the given parameters
-    private void CreateWorld() {
+    
+    // creates a new world with the given parameters
+    private void CreateNewWorld() {
         // check if the wallthickness is greater than 0
         if (WallThickness <= 0)
             WallThickness = 1;
@@ -82,10 +87,8 @@ public class WorldController : MonoBehaviour {
         }
         // Create the World with the given height and width
         this.World = new World(Width, Height);
-        
-        // create the rooms
-        this.Rooms = new List<Room>();
-        this.Rooms = MapGenerator.CreateRooms();
+
+        this.World.CreateRooms();
 
         // Create the Maze
         MapGenerator.CreateMaze();
@@ -106,7 +109,37 @@ public class WorldController : MonoBehaviour {
         }
     }
     
-    private void Die() {
+    private static void Die() {
         Debug.Log("YOU DIED!!!!");
     }
+
+
+    #region Saving & Loading
+    ////////////////////////
+    /// Saving & Loading ///
+    ////////////////////////
+
+    public void SaveWorld(  ) {
+        // Serializes the World to Xml
+        XmlSerializer serializer = new XmlSerializer(typeof(World));
+        // For now just one save slot
+        FileStream stream = new FileStream(Application.streamingAssetsPath + "/world.xml", FileMode.Create);
+        serializer.Serialize(stream, this.World);
+        stream.Close();
+        Debug.Log("Saved");
+    }
+
+    public void LoadWorld(  ) {
+        // Deserializes the Xml to a World
+        XmlSerializer serializer = new XmlSerializer(typeof(World));
+        // Just one SaveSlot
+        FileStream stream = new FileStream(Application.streamingAssetsPath + "/world.xml", FileMode.Open);
+        this.World = (World)serializer.Deserialize(stream);
+        stream.Close();
+        Debug.Log("Loaded");
+        // The Player itself.
+        // Parameters are SpawnTile, (max)health, (max)saturation, (max)stamina
+        this.Player = new PlayerCharacter(this.World.GetTileAt(1, 1), 20, 30, 40, 10);
+    }
+    #endregion
 }

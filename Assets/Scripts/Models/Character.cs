@@ -2,7 +2,7 @@
 using System.Collections;
 
 // base class for all characters
-public class Character {
+public abstract class Character {
 
     // position of the Character
     protected Vector3 Position {
@@ -17,7 +17,7 @@ public class Character {
     }
 
     // Contructor will likely never be called on its own, only gets called by its inheriting classes
-    public Character(Tile tile, int health) {
+    protected Character( Tile tile, int health ) {
         // set the position and the health
         this.Position = new Vector3(tile.X, 0, tile.Z);
         this.Health = health;
@@ -26,9 +26,9 @@ public class Character {
     // simple function to move the Character.
     // TODO: Maybe move to the EnemyCharacter Class, because the Player will never need this function.
     //       PLayerMovement is handled with the FPSWakerEnhanced Class
-    protected void Move(Vector3 posChange) {
+    protected void Move( Vector3 posChange ) {
         this.Position += posChange;
     }
-    
+
 
 }
