@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChestController : MonoBehaviour {
+public class ChestController : MonoBehaviour
+{
 
-	// Use this for initialization
-	private void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	private void Update () {
-		
-	}
+    // Use this for initialization
+    private void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+
+    }
 }

@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class cameraLookController : MonoBehaviour {
+public class cameraLookController : MonoBehaviour
+{
 
     public float Sensitivity = 5.0f;
     public float Smoothing = 2.0f;
@@ -11,13 +12,15 @@ public class cameraLookController : MonoBehaviour {
     private Vector2 _smoothV;
     private GameObject _character;
 
-    private void Start () {
+    private void Start()
+    {
         _character = this.transform.parent.gameObject;
         Cursor.lockState = CursorLockMode.Locked;
         _mouseLocked = true;
     }
-	
-	private void Update () {
+
+    private void Update()
+    {
         Vector2 md = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
         md = Vector2.Scale(md, new Vector2(Sensitivity * Smoothing, Sensitivity * Smoothing));
@@ -29,12 +32,14 @@ public class cameraLookController : MonoBehaviour {
         this.transform.localRotation = Quaternion.AngleAxis(-_mouseLook.y, Vector3.right);
         _character.transform.localRotation = Quaternion.AngleAxis(_mouseLook.x, _character.transform.up);
 
-        if (Input.GetKeyDown("escape") && _mouseLocked) {
+        if(Input.GetKeyDown("escape") && _mouseLocked)
+        {
             Cursor.lockState = CursorLockMode.None;
             _mouseLocked = false;
             Debug.Log("unlocked");
         }
-        else if(Input.GetKeyDown("escape") && _mouseLocked == false) {
+        else if(Input.GetKeyDown("escape") && _mouseLocked == false)
+        {
             Cursor.lockState = CursorLockMode.Locked;
             _mouseLocked = true;
             Debug.Log("locked");

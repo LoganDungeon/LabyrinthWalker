@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class LabyrinthGOController : MonoBehaviour {
+public class LabyrinthGOController : MonoBehaviour
+{
 
     // WallTexture
     // FIXME: Maybe change, that i can choose between different Materials
@@ -18,14 +19,17 @@ public class LabyrinthGOController : MonoBehaviour {
     private float _wallThickness;
 
     // World
-    private static World World {
-        get {
+    private static World World
+    {
+        get
+        {
             return WorldController.Instance.World;
         }
     }
 
     // Use this for initialization
-    private void Start() {
+    private void Start()
+    {
         _wallThickness = WorldController.Instance.WallThickness;
         // instantiate the parentGameObjects
         _wallParent = new GameObject("WallParent");
@@ -33,9 +37,12 @@ public class LabyrinthGOController : MonoBehaviour {
         _wallParent.transform.SetParent(this.transform);
         _floorParent.transform.SetParent(this.transform);
         // go through every Tile and create the GameObjects with the visual Mesh 
-        for (int x = 0; x < World.Width; x++) {
-            for (int z = 0; z < World.Height; z++) {
-                if (World.GetTileAt(x, z).IsWall) {
+        for(int x = 0; x < World.Width; x++)
+        {
+            for(int z = 0; z < World.Height; z++)
+            {
+                if(World.GetTileAt(x, z).IsWall)
+                {
                     // we are on a wall Tile
                     GameObject wallGoLower = new GameObject();
                     MeshCollider meshCol = wallGoLower.AddComponent<MeshCollider>();
@@ -62,10 +69,12 @@ public class LabyrinthGOController : MonoBehaviour {
                     wallGoUpper.SetActive(true);
 
                 }
-                else {
+                else
+                {
                     // we are on a floor tile
                     // first create the GameObject and Mesh for the Floor
-                    GameObject floor = new GameObject {
+                    GameObject floor = new GameObject
+                    {
                         name = "Floor_" + x + "_" + z
                     };
                     MeshCollider meshCol = floor.AddComponent<MeshCollider>();
@@ -78,7 +87,8 @@ public class LabyrinthGOController : MonoBehaviour {
                     floor.transform.position = new Vector3(_wallThickness * x, 0, _wallThickness * z);
                     floor.GetComponent<Renderer>().material = FloorMaterial;
                     // then create the GameObject and Mesh for the ceiling
-                    GameObject ceiling = new GameObject {
+                    GameObject ceiling = new GameObject
+                    {
                         name = "Ceiling_" + x + "_" + z
                     };
                     ceiling.AddComponent<MeshRenderer>();
@@ -122,23 +132,27 @@ public class LabyrinthGOController : MonoBehaviour {
     //    }
     //}
 
-    private void FixedUpdate() {
+    private void FixedUpdate()
+    {
 
         // Position of the Player
-        Transform playerTransform = WorldController.Instance.Player.PcgoC.PlayerGo.transform;
+        Transform playerTransform = World.Player.PcgoC.PlayerGo.transform;
 
         // only render the tiles, that  are in range of the Character
         // by deactivating the tiles, that are out of range.
         // TODO: i need a better way to do this. i only have to deactivate the visuals of the Objects
         // currently calculated with manhattan distance
-        if (RenderAll) return;
-        foreach (Transform wall in _wallParent.transform) {
+        if(RenderAll)
+            return;
+        foreach(Transform wall in _wallParent.transform)
+        {
             wall.gameObject.SetActive(Mathf.Abs(wall.transform.position.x - playerTransform.position.x) +
                                       Mathf.Abs(wall.transform.position.z - playerTransform.position.z) <
                                       WorldController.Instance.RenderDistance);
         }
 
-        foreach (Transform floor in _floorParent.transform) {
+        foreach(Transform floor in _floorParent.transform)
+        {
             floor.gameObject.SetActive(Mathf.Abs(floor.transform.position.x - playerTransform.position.x) +
                                        Mathf.Abs(floor.transform.position.z - playerTransform.position.z) <
                                        WorldController.Instance.RenderDistance);
@@ -146,17 +160,20 @@ public class LabyrinthGOController : MonoBehaviour {
     }
 
     // creates a square floor mesh
-    private static Mesh CreateFloorMesh( Vector3 pos, float length ) {
+    private static Mesh CreateFloorMesh(Vector3 pos, float length)
+    {
         return CreateFloorMesh(pos, length, length);
     }
 
     // creates a square ceiling mesh
-    private Mesh CreateCeilingMesh( Vector3 pos, float length ) {
+    private Mesh CreateCeilingMesh(Vector3 pos, float length)
+    {
         return CreateCeilingMesh(pos, length, length, length);
     }
 
     // creates a Floor Mesh with the given size
-    private static Mesh CreateFloorMesh( Vector3 pos, float length, float width ) {
+    private static Mesh CreateFloorMesh(Vector3 pos, float length, float width)
+    {
         Vector3 p0 = new Vector3(pos.x - 0.5f * length, pos.y, pos.z - 0.5f * width);
         Vector3 p1 = new Vector3(pos.x - 0.5f * length, pos.y, pos.z + 0.5f * width);
         Vector3 p2 = new Vector3(pos.x + 0.5f * length, pos.y, pos.z + 0.5f * width);
@@ -187,7 +204,8 @@ public class LabyrinthGOController : MonoBehaviour {
             0,2,3
         };
 
-        Mesh mesh = new Mesh {
+        Mesh mesh = new Mesh
+        {
             vertices = vertices,
             normals = normales,
             uv = uvs,
@@ -198,7 +216,8 @@ public class LabyrinthGOController : MonoBehaviour {
     }
 
     // creates a Ceiling Mesh with the given size
-    private Mesh CreateCeilingMesh( Vector3 pos, float length, float width, float height ) {
+    private Mesh CreateCeilingMesh(Vector3 pos, float length, float width, float height)
+    {
         Vector3 p0 = new Vector3(pos.x - 0.5f * length, pos.y + 2 * height, pos.z - 0.5f * width);
         Vector3 p1 = new Vector3(pos.x - 0.5f * length, pos.y + 2 * height, pos.z + 0.5f * width);
         Vector3 p2 = new Vector3(pos.x + 0.5f * length, pos.y + 2 * height, pos.z + 0.5f * width);
@@ -229,7 +248,8 @@ public class LabyrinthGOController : MonoBehaviour {
             3,2,0
         };
 
-        Mesh mesh = new Mesh {
+        Mesh mesh = new Mesh
+        {
             vertices = vertices,
             normals = normales,
             uv = uvs,
@@ -240,12 +260,14 @@ public class LabyrinthGOController : MonoBehaviour {
     }
 
     // creates a creates a Cube Mesh with the given length
-    private Mesh CreateCubeMesh( Vector3 pos, float length, bool frontSide, bool leftSide, bool backSide, bool rightSide ) {
+    private Mesh CreateCubeMesh(Vector3 pos, float length, bool frontSide, bool leftSide, bool backSide, bool rightSide)
+    {
         return CreateCuboidMesh(pos, length, length, length, frontSide, leftSide, backSide, rightSide);
     }
 
     // creates a cuboid Mesh with the given size
-    private Mesh CreateCuboidMesh( Vector3 pos, float length, float width, float height, bool frontSide, bool leftSide, bool backSide, bool rightSide ) {
+    private Mesh CreateCuboidMesh(Vector3 pos, float length, float width, float height, bool frontSide, bool leftSide, bool backSide, bool rightSide)
+    {
         #region Vertices
         Vector3 p0 = new Vector3(pos.x - 0.5f * length, pos.y, pos.z - 0.5f * width);
         Vector3 p1 = new Vector3(pos.x - 0.5f * length, pos.y, pos.z + 0.5f * width);
@@ -337,7 +359,8 @@ public class LabyrinthGOController : MonoBehaviour {
         #region Triangles
         List<int> triangles = new List<int>();
 
-        if (leftSide) {
+        if(leftSide)
+        {
             // Left
             triangles.Add(3 + 4 * 1);
             triangles.Add(1 + 4 * 1);
@@ -346,7 +369,8 @@ public class LabyrinthGOController : MonoBehaviour {
             triangles.Add(2 + 4 * 1);
             triangles.Add(1 + 4 * 1);
         }
-        if (frontSide) {
+        if(frontSide)
+        {
             // Front
             triangles.Add(3 + 4 * 2);
             triangles.Add(1 + 4 * 2);
@@ -355,7 +379,8 @@ public class LabyrinthGOController : MonoBehaviour {
             triangles.Add(2 + 4 * 2);
             triangles.Add(1 + 4 * 2);
         }
-        if (backSide) {
+        if(backSide)
+        {
             // Back
             triangles.Add(3 + 4 * 3);
             triangles.Add(1 + 4 * 3);
@@ -364,7 +389,8 @@ public class LabyrinthGOController : MonoBehaviour {
             triangles.Add(2 + 4 * 3);
             triangles.Add(1 + 4 * 3);
         }
-        if (rightSide) {
+        if(rightSide)
+        {
             // Right
             triangles.Add(3 + 4 * 4);
             triangles.Add(1 + 4 * 4);
@@ -375,7 +401,8 @@ public class LabyrinthGOController : MonoBehaviour {
         }
         #endregion
 
-        Mesh mesh = new Mesh {
+        Mesh mesh = new Mesh
+        {
             vertices = vertices,
             normals = normales,
             uv = uvs,
@@ -386,19 +413,23 @@ public class LabyrinthGOController : MonoBehaviour {
     }
 
     // 4 functions used to determine, if the requested neighbour of a tile is Floor or not (wall)
-    private bool FrontNeighbourIsFloor( int x, int z ) {
+    private bool FrontNeighbourIsFloor(int x, int z)
+    {
         return !(x > 0 && World.GetTileAt(x - 1, z).IsWall);
     }
 
-    private bool RightNeighbourIsFloor( int x, int z ) {
+    private bool RightNeighbourIsFloor(int x, int z)
+    {
         return !(z < World.Width - 1 && World.GetTileAt(x, z + 1).IsWall);
     }
 
-    private bool BackNeighbourIsFloor( int x, int z ) {
+    private bool BackNeighbourIsFloor(int x, int z)
+    {
         return !(x < World.Height - 1 && World.GetTileAt(x + 1, z).IsWall);
     }
 
-    private bool LeftNeighbourIsFloor( int x, int z ) {
+    private bool LeftNeighbourIsFloor(int x, int z)
+    {
         return !(z > 0 && World.GetTileAt(x, z - 1).IsWall);
     }
 }

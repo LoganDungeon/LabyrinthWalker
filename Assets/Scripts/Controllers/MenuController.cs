@@ -3,29 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuController : MonoBehaviour {
+public class MenuController : MonoBehaviour
+{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    // Use this for initialization
+    void Start()
+    {
 
-    public void NewGame() {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    public void NewGame()
+    {
         OptionsController.NewWorld = true;
         SceneManager.LoadScene(1);
     }
 
-    public void LoadGame() {
+    public void LoadGame()
+    {
         OptionsController.NewWorld = false;
         SceneManager.LoadScene(1);
     }
 
-    public void CloseGame() {
+    public void CloseGame()
+    {
         Application.Quit();
     }
 }

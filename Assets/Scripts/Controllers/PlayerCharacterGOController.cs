@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 
 // will handle the GameObject with the visual side of the PlayerCharacter
-public class PlayerCharacterGOController : MonoBehaviour {
+public class PlayerCharacterGOController : MonoBehaviour
+{
 
     // the actual GameObject of the Player
-    public GameObject PlayerGo {
+    public GameObject PlayerGo
+    {
         get;
         set;
     }
@@ -22,7 +24,8 @@ public class PlayerCharacterGOController : MonoBehaviour {
     }
     */
     // creates the PlayerCharacter at the position of the given tile
-    public void CreateCharacterGameObject(Tile t) {
+    public void CreateCharacterGameObject(Tile t)
+    {
         Debug.Log("Created CharacterGameObject");
         this.PlayerGo = Instantiate(WorldController.Instance.PlayerCharacter.gameObject);
         this.PlayerGo.transform.position = new Vector3(t.X * WorldController.Instance.WallThickness, 1.5f, t.Z * WorldController.Instance.WallThickness);

@@ -2,15 +2,18 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class UITextInventory : MonoBehaviour {
+public class UITextInventory : MonoBehaviour
+{
 
     private Text _text;
 
-	private void Start() {
+    private void Start()
+    {
         _text = GetComponent<Text>();
-	}
-	
-	private void Update() {
-        _text.text = "Inventory\nSlots:\n" + WorldController.Instance.Player.GetInventorySpaces();
-	}
+    }
+
+    private void Update()
+    {
+        _text.text = "Inventory\nSlots:\n" + WorldController.Instance.World.Player.GetInventorySpaces();
+    }
 }
