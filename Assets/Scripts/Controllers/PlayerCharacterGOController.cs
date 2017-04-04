@@ -26,7 +26,6 @@ public class PlayerCharacterGOController : MonoBehaviour
     // creates the PlayerCharacter at the position of the given tile
     public void CreateCharacterGameObject(Tile t)
     {
-        Debug.Log("Created CharacterGameObject");
         this.PlayerGo = Instantiate(WorldController.Instance.PlayerCharacter.gameObject);
         this.PlayerGo.transform.position = new Vector3(t.X * WorldController.Instance.WallThickness, 1.5f, t.Z * WorldController.Instance.WallThickness);
         this.PlayerGo.transform.SetParent(this.transform);

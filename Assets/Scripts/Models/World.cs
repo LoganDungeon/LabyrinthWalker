@@ -197,7 +197,7 @@ public class World : IXmlSerializable
 
         writer.WriteStartElement("Characters");
         writer.WriteStartElement("Player");
-        Player.WriteXml(writer);
+        this.Player.WriteXml(writer);
         writer.WriteEndElement();
         writer.WriteEndElement();
 

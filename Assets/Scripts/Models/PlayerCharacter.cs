@@ -63,9 +63,7 @@ public class PlayerCharacter : Character, IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-        Debug.Log("ReadXML PlayerCharacter: " + reader.Name);
         reader.ReadToDescendant("PlayerStats");
-        Debug.Log("ReadXML PlayerCharacter: " + reader.Name);
         /*reader.MoveToAttribute("Health");
         this.Health = reader.ReadContentAsInt();
         reader.MoveToAttribute("Stamina");

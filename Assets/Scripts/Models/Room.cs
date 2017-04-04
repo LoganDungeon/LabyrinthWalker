@@ -77,13 +77,19 @@ public class Room : IXmlSerializable
 
         _edgeTiles = new List<Tile>();
         _innerTiles = new List<Tile>();
-        AddTilesToLists();
         // change the tiles to be wall free
         CreateRoom();
+        SetupRoom();
 
         // TODO
         // For now i want to add between 1 and 4 entrances, Later on i maybe want to create entrances, based on the size of the room
         AddEntrances(Random.Range(1, 5));
+    }
+
+    private void SetupRoom()
+    {
+        AddTilesToLists();
+
     }
 
     // adds the Tiles in the room to the specific List, if the tiles are either edge tiles or not
@@ -95,11 +101,11 @@ public class Room : IXmlSerializable
             {
                 if(x == this.LowerTile.X || x == this.UpperTile.X || z == this.LowerTile.Z || z == this.UpperTile.Z)
                 {
-                    _edgeTiles.Add(World.GetTileAt(x, z));
+                    _edgeTiles.Add(this.World.GetTileAt(x, z));
                 }
                 else
                 {
-                    _innerTiles.Add(World.GetTileAt(x, z));
+                    _innerTiles.Add(this.World.GetTileAt(x, z));
                 }
             }
         }
@@ -112,7 +118,7 @@ public class Room : IXmlSerializable
         {
             for(int z = this.LowerTile.Z - 1; z <= this.UpperTile.Z + 1; z++)
             {
-                Tile t = World.GetTileAt(x, z);
+                Tile t = this.World.GetTileAt(x, z);
                 if(x == this.LowerTile.X - 1 || x == this.UpperTile.X + 1 || z == this.LowerTile.Z - 1 ||
                     z == this.UpperTile.Z + 1)
                 {
@@ -134,8 +140,8 @@ public class Room : IXmlSerializable
         // create a list with all the possible entrance tiles
         foreach(Tile tile in _edgeTiles)
         {
-            if((tile.X % 2 != 0) && (tile.Z % 2 != 0) && tile.X != 1 && tile.X != World.Width - 2 && tile.Z != 1 &&
-                tile.Z != World.Width - 2)
+            if(tile.X % 2 != 0 && tile.Z % 2 != 0 && tile.X != 1 && tile.X != this.World.Width - 2 && tile.Z != 1 &&
+                tile.Z != this.World.Width - 2)
             {
                 possibleEntranceTiles.Add(tile);
             }
@@ -162,14 +168,14 @@ public class Room : IXmlSerializable
                 switch(rand)
                 {
                     case 0:
-                        World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsRoomWall =
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsRoomWall =
                             false;
-                        World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsWall = false;
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsWall = false;
                         break;
                     case 1:
-                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsRoomWall =
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsRoomWall =
                             false;
-                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsWall = false;
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsWall = false;
                         break;
                 }
                 continue;
@@ -182,14 +188,14 @@ public class Room : IXmlSerializable
                 switch(rand)
                 {
                     case 0:
-                        World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsRoomWall =
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsRoomWall =
                             false;
-                        World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsWall = false;
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsWall = false;
                         break;
                     case 1:
-                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsRoomWall =
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsRoomWall =
                             false;
-                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsWall = false;
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsWall = false;
                         break;
                 }
                 continue;
@@ -202,14 +208,14 @@ public class Room : IXmlSerializable
                 switch(rand)
                 {
                     case 0:
-                        World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsRoomWall =
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsRoomWall =
                             false;
-                        World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsWall = false;
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsWall = false;
                         break;
                     case 1:
-                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsRoomWall =
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsRoomWall =
                             false;
-                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsWall = false;
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsWall = false;
                         break;
                 }
                 continue;
@@ -222,14 +228,14 @@ public class Room : IXmlSerializable
                 switch(rand)
                 {
                     case 0:
-                        World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsRoomWall =
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsRoomWall =
                             false;
-                        World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsWall = false;
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsWall = false;
                         break;
                     case 1:
-                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsRoomWall =
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsRoomWall =
                             false;
-                        World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsWall = false;
+                        this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsWall = false;
                         break;
                 }
                 continue;
@@ -238,31 +244,31 @@ public class Room : IXmlSerializable
             if(possibleEntranceTiles[temp].X == this.LowerTile.X)
             {
                 // we are on an edge, so there is 1 possible entrances
-                World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsRoomWall = false;
-                World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsWall = false;
+                this.World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsRoomWall = false;
+                this.World.GetTileAt(possibleEntranceTiles[temp].X - 1, possibleEntranceTiles[temp].Z).IsWall = false;
                 continue;
             }
             // 6 edge, upper
             if(possibleEntranceTiles[temp].Z == this.UpperTile.Z)
             {
-                World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsRoomWall = false;
-                World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsWall = false;
+                this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsRoomWall = false;
+                this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z + 1).IsWall = false;
                 continue;
             }
             // 7 edge, right
             if(possibleEntranceTiles[temp].X == this.UpperTile.X)
             {
                 // we are on a corner, so there is 1 possible entrances
-                World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsRoomWall = false;
-                World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsWall = false;
+                this.World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsRoomWall = false;
+                this.World.GetTileAt(possibleEntranceTiles[temp].X + 1, possibleEntranceTiles[temp].Z).IsWall = false;
                 continue;
             }
             // 8 edge, lower
             if(possibleEntranceTiles[temp].Z == this.LowerTile.Z)
             {
                 // we are on a corner, so there are 2 possible entrances
-                World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsRoomWall = false;
-                World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsWall = false;
+                this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsRoomWall = false;
+                this.World.GetTileAt(possibleEntranceTiles[temp].X, possibleEntranceTiles[temp].Z - 1).IsWall = false;
                 continue;
             }
             possibleEntranceTiles.RemoveAt(temp);
@@ -300,5 +306,8 @@ public class Room : IXmlSerializable
         reader.MoveToAttribute("Z");
         z = reader.ReadContentAsInt();
         this.UpperTile = this.World.GetTileAt(x, z);
+        SetupRoom();
+        Debug.Log("Loaded Room. Inner Tiles: " + this._innerTiles.Count + "\n" +
+                  "Edge Tiles: " + this._edgeTiles.Count);
     }
 }
