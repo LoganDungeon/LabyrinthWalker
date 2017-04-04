@@ -53,6 +53,8 @@ public class World : IXmlSerializable
         this.Height = height;
 
         _tiles = new Tile[width, height];
+        // create the rooms list
+        Rooms = new List<Room>();
 
         for(int x = 0; x < width; x++)
         {
@@ -90,9 +92,6 @@ public class World : IXmlSerializable
     // creates the Rooms and returns a List with information about them
     public void CreateRooms()
     {
-
-        // create the rooms
-        this.Rooms = new List<Room>();
 
         // number of the atempts, how often the algorithm will try to place rooms
         int atempts = Mathf.FloorToInt(Mathf.Sqrt(this.Height * this.Width));
@@ -171,9 +170,11 @@ public class World : IXmlSerializable
     // saves the World to Xml
     public void WriteXml(XmlWriter writer)
     {
+        // Width and Height
         writer.WriteAttributeString("Width", this.Width.ToString());
         writer.WriteAttributeString("Height", this.Height.ToString());
 
+        // Tiles
         writer.WriteStartElement("Tiles");
         for(int x = 0; x < this.Width; x++)
         {
@@ -186,6 +187,7 @@ public class World : IXmlSerializable
         }
         writer.WriteEndElement();
 
+        // Rooms
         writer.WriteStartElement("Rooms");
         foreach(Room room in this.Rooms)
         {
@@ -195,9 +197,10 @@ public class World : IXmlSerializable
         }
         writer.WriteEndElement();
 
+        // Characters
         writer.WriteStartElement("Characters");
         writer.WriteStartElement("Player");
-        this.Player.WriteXml(writer);
+        Player.WriteXml(writer);
         writer.WriteEndElement();
         writer.WriteEndElement();
 
@@ -208,21 +211,21 @@ public class World : IXmlSerializable
     {
         Debug.Log("World::ReadXML");
 
+        // Width and Height
         reader.MoveToAttribute("Width");
         this.Width = reader.ReadContentAsInt();
         reader.MoveToAttribute("Height");
         this.Height = reader.ReadContentAsInt();
-        //reader.ReadTo
         reader.MoveToElement();
 
-
+        // Setup the World
         SetupWorld(this.Width, this.Height);
 
+        // Tiles
         reader.ReadToDescendant("Tiles");
         reader.ReadToDescendant("Tile");
         while(reader.IsStartElement("Tile"))
         {
-
             reader.MoveToAttribute("X");
             int x = reader.ReadContentAsInt();
             reader.MoveToAttribute("Z");
@@ -232,13 +235,23 @@ public class World : IXmlSerializable
 
             reader.ReadToNextSibling("Tile");
         }
+
+        // Rooms
+        reader.ReadToFollowing("Rooms");
+        reader.ReadToFollowing("Room");
+        while(reader.Name == "Room")
+        {
+            Room r = new Room();
+            r.ReadXml(reader);
+            Rooms.Add(r);
+            reader.Read();
+        }
+
+        // Characters
         reader.ReadToFollowing("Characters");
-        //reader.ReadToDescendant("Characters");
         reader.ReadToDescendant("Player");
 
-        //this.Player = new PlayerCharacter(GetTileAt(1, 1), 20, 1, 40, 10);
-        this.Player.ReadXml(reader);
+        Player.ReadXml(reader);
     }
-
     #endregion
 }
